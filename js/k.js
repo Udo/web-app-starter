@@ -1,3 +1,5 @@
+var enable_debug = false;
+
 K = {
   
   update : function(eid, params) {
