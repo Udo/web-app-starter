@@ -9,9 +9,11 @@
     <link rel="icon" type="image/png" href="/theme/img/favicon.png" />
     <script src="/js/jquery.js"></script>
     <script src="/js/k.js"></script>
+  </head>
+  <body>
     
     <?= component('nav/shortcut-bar') ?>
     <?= component('nav/menu', 'menu') ?>
     <?= component('nav/content', 'content') ?>
     
-</head></html><? });
+</body></html><? });
