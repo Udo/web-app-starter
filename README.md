@@ -76,7 +76,64 @@ parameter. This is useful when the elements later needs to be reloaded or regene
 `$prop` is an optional parameter to communicate further parameters to the component, and this
 corresponds to the `$prop` parameter being passed to a component's lambda function.
 
+## Logging
 
+This package includes a very basic Log class.
+
+```php
+Log::debug($module, $text) /* writes to log/debug.[Y]-[m].log */
+Log::text($module, $text)   /* writes to log/log.[Y]-[m].log */
+Log::audit($module, $text) /* writes to system journal */
+```
+
+`$module` should be a short string identifying the module or context of the log line.
+
+`$text` text to be logged.
+
+## Profiler
+
+A basic profiling fixture.
+
+```php
+Profiler::log($text, $backtrace = false) 
+```
+
+`$text` name/text describing the checkpoint to be profiled.
+`$backtrace` optional data attachment.
+
+Profiler logs are not committed to disk. Log data for the current request is stored in
+`Profiler::$log`.
+
+## ulib Convenience Functions
+
+### function first($p1, ...)
+
+Takes any number of parameters and returns the first that is not null or empty.
+
+### function write_to_file($filename, $content)
+
+Appends `$content` to `$filename`.
+
+### function map($list, $func)
+
+Performs a map operation on `$list` using the `$func` predicate and returns a new array with the result.
+
+### function reduce($list, $func)
+
+Like `map()` but only adds results on entries where `$func` does not return null.
+
+### function cfg($key)
+
+Shortcut for accessing the configuration global `$GLOBALS['config']`. For example, a `$key` of `'db/host'` would 
+translate to `$GLOBALS['config']['db']['host']`.
+
+### function nibble($segdiv, &$cake, &$found = false)
+
+Cuts off the part of `&$cake` before the first occurrence of `$segdiv`, and returns that part.
+
+### function starts_with($s, $match) / function ends_with($s, $match)
+
+Returns true if `$s` starts/ends with `$match`.
 
 ## License (MIT Open Source)
 

@@ -268,28 +268,6 @@ function parse_request_uri($uri = false)
   return($result);
 }
 
-function element($name)
-{
-  $args = func_get_args();
-  $name = array_shift($args);
-  if(!isset($GLOBALS['elementCache'][$name]))
-  {
-    if(isset($GLOBALS['elementLocator']))
-      $GLOBALS['elementCache'][$name] = $GLOBALS['elementLoader']($name);
-    else
-      $GLOBALS['elementCache'][$name] = require(@first($GLOBALS['elementDir'], '').$name.'.php');
-  }
-  return(call_user_func_array($GLOBALS['elementCache'][$name], $args));
-}
-
-
-
-
-
-
-
-
-
 
 
 

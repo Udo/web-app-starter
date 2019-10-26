@@ -21,6 +21,7 @@ class Profiler
       self::$log[] = json_encode($backtrace).chr(10);
     self::$last = $thistime;
     self::$current = $absoluteMS;
+    return($thistime);
   }
   
   static function get_time()
