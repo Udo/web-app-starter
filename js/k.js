@@ -5,17 +5,20 @@ K = {
     if(!element) {
       console.error('element not found', eid, params);
     } else {
-      var p = {
-        call : JSON.stringify(params || {}),
-      };
+	  if(!params) params = {};
+      var attr = {};
       $(element.get(0).attributes).each(function(k, v) {
-        p[v.name] = v.value;
+        attr[v.name] = v.value;
       });
-      //console.log(p);
-      $.post('index.php', p, function(data) {
+      var component = attr['data-com'];
+      delete attr['data-com'];
+      params.attr = attr;
+      $.post('/:'+component, params, function(data) {
         element.replaceWith(data);
+        if(enable_debug) console.log(component, params);
       });
     }
   },
   
 }
+

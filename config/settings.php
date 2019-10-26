@@ -15,3 +15,9 @@
   define('ONE_DAY', 60*60*24);
   define('ONE_MONTH', 60*60*24*30);
   define('ONE_YEAR', 60*60*24*30*365);
+  
+  $GLOBALS['config'] = array(
+  
+	# fill me
+  
+  );

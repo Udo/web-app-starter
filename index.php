@@ -5,7 +5,7 @@
   include('lib/render.php');
   
   URL::MakeRoute();
+    
+  component(URL::$route['page'], $_REQUEST['attr']['id']);
   
-  if(!$_REQUEST['data-com']) $_REQUEST['data-com'] = 'start';
-  
-  component($_REQUEST['data-com']);
+  Log::audit('page:'.URL::$route['page'], URL::$route['l-path']);

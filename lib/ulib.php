@@ -8,6 +8,8 @@ spl_autoload_register(function ($class_name) {
     return;
   }
 });
+
+Profiler::start();
   
 # **************************** GENERAL UTILITY FUNCTIONS ******************************
 
