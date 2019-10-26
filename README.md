@@ -38,7 +38,7 @@ is used as the `page` value.
 The `l-path` key refers to the actual URL path as given by the browser. For example, the `'views/index.php'`
 view uses this to invoke the correct sub-view.
 
-## License
+## License (MIT Open Source)
 
 Copyright 2018 udo@openfu.com
 
