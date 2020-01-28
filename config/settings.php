@@ -27,7 +27,8 @@
 			'path' => 'themes/default/',	
 		),
 		'site' => array(
-			'name' => 'My Site',	
+			'name' => 'My Site',
+			'default_page_title' => 'Home',
 		),
 		'menu' => array(
 			'' => array('title' => 'Home', 'hidden' => true),	

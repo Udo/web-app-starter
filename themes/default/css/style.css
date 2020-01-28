@@ -4,6 +4,7 @@
 	$layer_color = 'rgba(255,255,255,0.1)';
 	$layer_color_hl = 'rgba(255,255,255,0.2)';
 	$text_color = '#aaaaaa';
+	$highlight = 'rgba(20,160,255,0.5)';
 
 ?>
 
@@ -88,4 +89,18 @@ h1 {
 	font-weight: normal;
 	line-height: normal;
 	background: <?= $layer_color ?>;
+}
+button, .btn {
+	padding:8px;
+	padding-top: 10px;
+	display: inline-block;
+	background: <?= $layer_color ?>;
+	color: white;
+	border: none;
+	border-bottom: 4px solid <?= $layer_color ?>;
+	cursor: pointer;
+}
+button:hover, .btn:hover {
+	background: <?= $layer_color_hl ?>;
+	border-bottom: 4px solid <?= $highlight ?>;
 }
