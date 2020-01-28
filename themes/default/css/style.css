@@ -1,20 +1,29 @@
+<?php
+
+	$bg_color = '#111111';
+	$layer_color = 'rgba(255,255,255,0.1)';
+	$layer_color_hl = 'rgba(255,255,255,0.2)';
+	$text_color = '#aaaaaa';
+
+?>
+
 @font-face {
 	font-family: default_font;
-	src: url(fonts/b612/b612-regular.ttf);
+	src: url(../fonts/b612/b612-regular.ttf);
 }
 @font-face {
 	font-family: default_font;
-	src: url(fonts/b612/b612-italic.ttf);
+	src: url(../fonts/b612/b612-italic.ttf);
 	font-style: italic;
 }
 @font-face {
 	font-family: default_font;
-	src: url(fonts/b612/b612-bold.ttf);
+	src: url(../fonts/b612/b612-bold.ttf);
 	font-weight: bold;
 }
 @font-face {
 	font-family: default_font;
-	src: url(fonts/b612/b612-bold-italic.ttf);
+	src: url(../fonts/b612/b612-bold-italic.ttf);
 	font-weight: bold;
 	font-style: italic;
 }
@@ -29,36 +38,36 @@ body {
 	padding: 0px;
 	line-height: 1.0;
 	box-sizing: border-box;
-	background: rgba(0,50,200,0.9);
-	color: white;
+	background: <?= $bg_color ?>;
+	color: <?= $text_color ?>;
 }
 a {
-	color: yellow;
+	color: white;
 }
 nav {
 	position: fixed;
 	top: 0;
 	left: 0;
 	right: 0;
-	background: rgba(0,0,0,0.5);
+	margin-left: 12px;
 }
 nav > a {
 	padding: 16px;
 	display: inline-block;
-	background: rgba(0,0,0,0.5);
+	background: <?= $layer_color ?>;
 	margin-right: 2px;
+	color: <?= $text_color ?>;
 	text-decoration: none;
 }
 nav > a:hover {
-	background: rgba(50,155,255,0.75);
+	background: <?= $layer_color_hl ?>;
 }
 #content {
 	line-height: 1.8;
 	margin: 12px;
 	margin-top: 52px;
 	padding: 12px;
-	background: white;
-	color: rgba(0,0,0,0.75);
+	background: <?= $layer_color ?>;
 	min-height: 480px;
 }
 #content > a {
@@ -66,6 +75,17 @@ nav > a:hover {
 }
 footer {
 	text-align: center;
-	color: rgba(255,255,255,0.5);
+	color: rgba(255,255,255,0.25);
 	margin-top: 32px;
+}
+h1 {
+	margin-left: -12px;
+	margin-right: -12px;
+	margin-top: -12px;
+	margin-bottom: 12px;
+	padding: 12px;
+	padding-top: 18px;
+	font-weight: normal;
+	line-height: normal;
+	background: <?= $layer_color ?>;
 }

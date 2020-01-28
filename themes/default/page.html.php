@@ -13,8 +13,7 @@
   <link rel="apple-touch-icon" href="<?= $theme_path ?>icon.png">
   <script src="<?= $url_root ?>js/jquery.js"></script>
 
-  <link rel="stylesheet" href="<?= $theme_path ?>normalize.css">
-  <link rel="stylesheet" href="<?= $theme_path ?>style.css">
+  <link rel="stylesheet" href="<?= $theme_path ?>css/">
 
   <meta name="theme-color" content="#fafafa">
 </head>
