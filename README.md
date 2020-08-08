@@ -51,7 +51,7 @@ This uses the idea of immediate components to render HTML. For example, a given 
   <body>  
     <?= component('nav/shortcut-bar') ?>
     <?= component('nav/menu', 'menu') ?>
-    <?= component('nav/content', 'content') ?>
+    <?= component('nav/content', array('id' => 'content')) ?>
   </body>  
 </html><? });
 ```
@@ -66,12 +66,6 @@ component($file_name, $id_override = false, $prop = array())
 `$file_name` is the component's file name withint `views/`. Invoking the component() executes that file.
 If the file returns a lambda function, that function gets called every time the component is invoked. If the
 file returns a text, that text gets returned every time the component is invoked.
-
-`$id_override` is an optional parameter intended to override the component's HTML element id.
-As a rule, components should encapsulate themselves with an outer HTML element, like this:
-`<div <?= ap($prop) ?> class="menu-bar">...</div>`. The call to `ap($prop)` generates an `id`
-attribute automatically. The value of this `id` can be explicitly set by using the `$id_override`
-parameter. This is useful when the elements later needs to be reloaded or regenerated dynamically.
 
 `$prop` is an optional parameter to communicate further parameters to the component, and this
 corresponds to the `$prop` parameter being passed to a component's lambda function.

@@ -50,10 +50,10 @@
 		}
 	}
 	
-	function component_path($file_name,  $id_override = false, $prop = array(), $opt = array())
+	function component_path($file_name, $prop = array(), $opt = array())
 	{
 		$f = Renderer::get_func($file_name, true);
-		if($f) return(component($file_name, $id_override, $prop, $opt));
+		if($f) return(component($file_name, $prop, $opt));
 		$fpath = array();
 		$seg = explode('/', $file_name);
 		array_unshift($seg, '');
@@ -83,26 +83,26 @@
 		}
 	}
 
-	function component_open($file_name, $id_override = false, $prop = array(), $opt = array())
+	function component_open($file_name, $prop = array(), $opt = array())
 	{
 		$prop['open'] = true;
-		return(component($file_name, $id_override, $prop, $opt));
+		return(component($file_name, $prop, $opt));
 	}
 	
-	function component_close($file_name, $id_override = false, $prop = array(), $opt = array())
+	function component_close($file_name, $prop = array(), $opt = array())
 	{
 		$prop['close'] = true;
-		return(component($file_name, $id_override, $prop, $opt));
+		return(component($file_name, $prop, $opt));
 	}
 	
-	function component_open_close($file_name, $id_override = false, $prop = array(), $opt = array())
+	function component_open_close($file_name, $prop = array(), $opt = array())
 	{
 		$prop['open'] = true;
 		$prop['close'] = true;
-		return(component($file_name, $id_override, $prop, $opt));
+		return(component($file_name, $prop, $opt));
 	}
 	
-	function component($file_name, $id_override = false, $prop = array(), $opt = array())
+	function component($file_name, $prop = array(), $opt = array())
 	{
 		if($file_name == '')
 		{
@@ -110,7 +110,7 @@
 			return(error_banner('Component not found: '.htmlspecialchars($file_name)));
 		}
 		$f = Renderer::get_func($file_name);
-		$prop['id'] = $id_override ? $id_override : 'c'.(Renderer::$id_counter++);
+		$prop['id'] = $prop['id'] ? $prop['id'] : 'c'.(Renderer::$id_counter++);
 		$prop['filename'] = $file_name;
 		Renderer::$call_stack[] = &$prop;
 		$result = $f($prop, $opt);

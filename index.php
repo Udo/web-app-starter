@@ -7,7 +7,7 @@
 	URL::MakeRoute();
 
 	ob_start();	
-	print(component(first(URL::$route['l-path'], 'index'), $_REQUEST['attr']['id']));
+	print(component(first(URL::$route['l-path'], 'index'), array($prop['id'] => $_REQUEST['attr']['id'])));
 	$content = ob_get_clean();
 		
 	include(cfg('theme/path').'/page.'.URL::$route['content-type'].'.php');
