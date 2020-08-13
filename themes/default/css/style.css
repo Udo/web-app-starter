@@ -5,6 +5,9 @@
 	$layer_color_hl = 'rgba(255,255,255,0.2)';
 	$text_color = '#aaaaaa';
 	$highlight = 'rgba(20,160,255,0.5)';
+	$interact_bg = '#3388cc;';
+	$interact_color = '#fff;';
+	$border = '1px solid rgba(150,150,150,0.3)';
 
 ?>
 
@@ -51,6 +54,7 @@ nav {
 	left: 0;
 	right: 0;
 	margin-left: 12px;
+	margin-right: 12px;
 }
 nav > a {
 	padding: 16px;
@@ -65,10 +69,7 @@ nav > a:hover {
 }
 #content {
 	line-height: 1.8;
-	margin: 12px;
-	margin-top: 52px;
-	padding: 12px;
-	background: <?= $layer_color ?>;
+	margin-top: 60px;
 	min-height: 480px;
 }
 #content > a {
@@ -80,27 +81,80 @@ footer {
 	margin-top: 32px;
 }
 h1 {
-	margin-left: -12px;
-	margin-right: -12px;
-	margin-top: -12px;
-	margin-bottom: 12px;
+	margin: 12px;
 	padding: 12px;
 	padding-top: 18px;
 	font-weight: normal;
 	line-height: normal;
 	background: <?= $layer_color ?>;
 }
-button, .btn {
-	padding:8px;
-	padding-top: 10px;
-	display: inline-block;
+
+#content > div, .block {
 	background: <?= $layer_color ?>;
-	color: white;
-	border: none;
-	border-bottom: 4px solid <?= $layer_color ?>;
-	cursor: pointer;
+	margin: 12px;
+	padding: 12px;
 }
-button:hover, .btn:hover {
-	background: <?= $layer_color_hl ?>;
-	border-bottom: 4px solid <?= $highlight ?>;
+
+form > div {
+	display: flex;
+	margin-bottom: 2px;
+}
+
+form > div > label {
+	flex: 1;
+	background: rgba(0,0,0,0.1);
+	max-width: 160px;
+	padding: 8px;
+}
+
+form > div > div, form > div > input {
+	flex: 2;
+	padding: 3px;
+}
+
+form > div > input {
+	border: <?= $border ?>;
+	background: none;
+	padding: 8px;
+	color: <?= $text_color ?>;
+	background: rgba(0,0,0,0.25);
+}
+
+form > div > input:focus {
+	outline: 1px solid <?= $interact_bg ?>;
+	color: <?= $interact_bg ?>;
+	background: rgba(0,0,0,0.5);
+}
+
+button, .btn, form > div > input[type=submit] {
+	padding: 12px;
+	background: <?= $interact_bg ?>;
+	color: <?= $interact_color ?>;
+	display: inline-block;
+	cursor: pointer;
+	opacity: 0.75;
+}
+
+button:hover, .btn:hover, form > div > input[type=submit]:hover {
+	background: <?= $interact_bg ?>;
+	opacity: 1.0;
+}
+
+.btn-highlight {
+	padding-bottom: 5px;
+	background: <?= $interact_bg ?>;	
+	border-bottom: 4px solid <?= $interact_bg ?>;
+}
+
+.btn-highlight:hover {
+	background: <?= $interact_bg ?>;
+}
+
+.banner {
+	padding: 12px;
+	background: rgba(0,0,0,0.5);
+}
+
+.error {
+	color: red;
 }

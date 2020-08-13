@@ -20,6 +20,9 @@
 
 <body>
 	<nav>
+		<?php if(!User::is_logged_in()) { ?>
+		<a style="float:right;" href="<?= URL::link('login') ?>">Log in</a>
+		<?php } ?>
 		<a href="<?= URL::link('/') ?>"><?= cfg('site/name') ?></a><?php
 		foreach(cfg('menu') as $mk => $menu_item) if(!$menu_item['hidden'])	
 		{

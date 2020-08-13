@@ -30,6 +30,9 @@
 			'name' => 'My Site',
 			'default_page_title' => 'Home',
 		),
+		'users' => array(
+			'enable_signup' => true,	
+		),
 		'menu' => array(
 			'' => array('title' => 'Home', 'hidden' => true),	
 			'page1' => array('title' => 'Page 1',),

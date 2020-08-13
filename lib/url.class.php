@@ -75,7 +75,7 @@ class URL
 		}
 		else
 		{
-			return($GLOBALS['config']['url']['root'].'?'.$path.($params !== false ? '?'.http_build_query($params) : ''));
+			return($GLOBALS['config']['url']['root'].'?'.$path.($params !== false ? '&'.http_build_query($params) : ''));
 		}
 	}
 
