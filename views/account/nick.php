@@ -1,3 +1,5 @@
+<?php User::require_login(); ?>
+
 <h1>Change Nickname</h1>
 <div class="block">
 	
