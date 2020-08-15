@@ -26,6 +26,12 @@ function first()
   }
 }
 
+function alnum($s, $replace_with = '_', $trim = true)
+{
+	if($trim) $s = trim(strtolower($s));
+	return(preg_replace("/[^[:alnum:][:space:]]/u", $replace_with, $s));
+}
+
 /** 
   * Append a string to the given file.
   */
@@ -216,12 +222,12 @@ function nibble($segdiv, &$cake, &$found = false)
   return $result;
 }
 
-function starts_with($s, $match)
+function str_starts_with($s, $match)
 {
   return(substr($s, 0, strlen($match)) == $match);
 }
 
-function ends_width($s, $match)
+function str_ends_width($s, $match)
 {
   return(substr($s, -strlen($match)) == $match);
 }
@@ -244,30 +250,14 @@ function match($subject, $criteria)
   return($result);
 }
 
-function parse_request_uri($uri = false)
-{ 	
-  $result = parse_url(@first($uri, $_SERVER['REQUEST_URI']));
-
-  if(isset($result['query']))
-  {
-    if(strpos($result['query'], '?') !== false || strpos($result['query'], '&') === false)
-    {
-      $result['path2'] = nibble('?', $result['query']);
-    }
-    parse_str($result['query'], $http_query);
-    $_SERVER['QUERY_STRING'] = $result['query'];
-    if(is_array($http_query)) 
-      foreach($http_query as $k => $v) $_REQUEST[$k] = $v;
-    $result['query'] = $http_query;
-  }
-
-  foreach(array('path', 'path2') as $p)  
-	  while(substr($result[$p], 0, 1) == '/' || substr($result[$p], 0, 1) == '.')
-	    $result[$p] = substr($result[$p], 1);
-
-  return($result);
+function get_browser_info()
+{
+	return(array(
+		'ip' => first($_SERVER['HTTP_CF_CONNECTING_IP'], $_SERVER['REMOTE_ADDR']),
+		'agent' => $_SERVER['HTTP_USER_AGENT'],
+		'lang' => $_SERVER['HTTP_ACCEPT_LANGUAGE'],
+		'cookie' => $_SERVER['HTTP_COOKIE'],
+		));
 }
-
-
 
 

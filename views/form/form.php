@@ -20,7 +20,8 @@
 				}
 			}
 		}
-		if($prop['ondata'] && sizeof($prop['errors']) == 0) $prop['ondata_result'] = $prop['ondata']($prop['data'], $prop);
+		if($prop['ondata'] && @sizeof($prop['errors']) == 0) 
+			$prop['ondata_result'] = $prop['ondata']($prop['data'], $prop);
 	}
 	
 	if($prop['show'] !== false)

@@ -20,7 +20,7 @@
 	
 		'url' => array(
 			'pretty' => false,
-			'root' => '/web-app-starter/',
+			'root' => false,
 			'content-type' => 'html',
 		),
 		'theme' => array(
@@ -40,3 +40,10 @@
 		),
 	
 	);
+	
+	if(!$GLOBALS['config']['url']['pretty'] && !$GLOBALS['config']['url']['root'])
+	{
+		$sroot = first($_SERVER['PHP_SELF'], $_SERVER['DOCUMENT_URI']);
+		if(str_ends_width($sroot, 'index.php'))
+			$GLOBALS['config']['url']['root'] = substr($sroot, 0, -strlen('index.php'));
+	}

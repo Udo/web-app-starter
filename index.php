@@ -1,10 +1,11 @@
 <?php
 
-	include('config/settings.php');
 	include('lib/ulib.php');
+	include('config/settings.php');
 	include('lib/render.php');
 	
 	URL::MakeRoute();
+	User::init();
 
 	ob_start();	
 	print(component(first(URL::$route['l-path'], 'index'), array($prop['id'] => $_REQUEST['attr']['id'])));

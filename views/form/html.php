@@ -2,9 +2,9 @@
 	
 	?><div>
 		<label><?= htmlspecialchars($prop['title']) ?></label>
-		<input type="password" name="<?= $prop['field'] ?>" placeholder="<?= htmlspecialchars($prop['placeholder']) ?>" value="<?= htmlspecialchars(first($prop['value'], $prop['default'])) ?>"/>
+		<div><?= htmlspecialchars(first($prop['value'], $prop['default'])) ?></div>
 	</div><?php
-		
+
 	if($prop['error']) 
 	{
 		?><div>
@@ -12,5 +12,5 @@
 			<?= component('elements/error', array('text' => $prop['error'])) ?>
 		</div><?php
 	}
-
+		
 });

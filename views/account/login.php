@@ -4,11 +4,11 @@
 	
 	<?= component('form/form', array('name' => 'login', 'fields' => array(
 		
-		'username' => array(
+		'email' => array(
 			'type' => 'string',
-			'title' => 'Username',
-			'value' => $_REQUEST['username'], 
-			'placeholder' => 'your username...',
+			'title' => 'Email',
+			'value' => $_REQUEST['email'], 
+			'placeholder' => 'you@example.com',
 			'validate' => 'mandatory',
 		),
 		'password' => array(
@@ -26,13 +26,14 @@
 		
 	), 'ondata' => function($data, &$form) {
 		
-		if(User::try_login($data['username'], $data['password']))
+		if(User::try_login($data['email'], $data['password']))
 		{
 			URL::redirect(first($_REQUEST['whence'], ''));
 		}
 		else
 		{
-			print(component('elements/error', array('text' => 'Could not sign you in, please re-check your credentials and try again.')));
+			print(component('elements/error', 
+				array('text' => first(User::$last_error, 'Could not sign you in, please re-check your credentials and try again.'))));
 		}
 		
 	})) ?>
@@ -46,29 +47,33 @@
 
 	<?= component('form/form', array('name' => 'signup', 'fields' => array(
 		
-		'username' => array(
-			'type' => 'string',
-			'title' => 'Username',
-			'value' => $_REQUEST['username'], 
-			'placeholder' => 'your username...',
-		),
 		'email' => array(
 			'type' => 'string',
 			'title' => 'Email',
 			'value' => $_REQUEST['email'], 
 			'placeholder' => 'you@example.com',
+			'validate' => 'mandatory',
+		),
+		'nick' => array(
+			'type' => 'string',
+			'title' => 'Nick',
+			'value' => $_REQUEST['nick'], 
+			'placeholder' => 'your_nickname',
+			'validate' => 'mandatory',
 		),
 		'password' => array(
 			'type' => 'password',
 			'title' => 'Password',
 			'value' => $_REQUEST['password'], 
 			'placeholder' => 'your password...',
+			'validate' => 'mandatory',
 		),
 		'password2' => array(
 			'type' => 'password',
 			'title' => '(repeat)',
 			'value' => $_REQUEST['password2'], 
 			'placeholder' => 'repeat your password...',
+			'validate' => 'mandatory',
 		),
 		'submit' => array(
 			'type' => 'submit',
@@ -78,13 +83,15 @@
 		
 	), 'ondata' => function($data, &$form) {
 		
-		if(User::try_login($data['username'], $data['password']))
+		if(User::try_create_account($data['email'], $form['data']['nick'], $data['password'], $data['password2']))
 		{
+			User::try_login($data['email'], $data['password']);
 			URL::redirect(first($_REQUEST['whence'], ''));
 		}
 		else
 		{
-			print(component('elements/error', array('text' => 'Could not sign you in, please re-check your credentials and try again.')));
+			print(component('elements/error', array(
+				'text' => first(User::$last_error, 'Could not create account'))));
 		}
 		
 	})) ?>

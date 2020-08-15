@@ -52,7 +52,7 @@ class URL
 		$route = $GLOBALS['config']['url'];
 		if(!$lc)
 			$lc = URL::ParseRequestURI();
-		if(starts_with($lc, $GLOBALS['config']['url']['root']))
+		if(str_starts_with($lc, $GLOBALS['config']['url']['root']))
 			$lc = substr($lc, strlen($GLOBALS['config']['url']['root']));
 		$seg = array();
 		foreach(explode('/', $lc) as $s) 
@@ -80,9 +80,9 @@ class URL
 	}
 
 	# redirect to URL and quit
-	static function Redirect($url = '/', $params = array())
+	static function Redirect($url = '', $params = array())
 	{
-		header('location: '.$url.(sizeof($params) > 0 ? '?'.http_build_query($params) : ''));
+		header('location: '.self::Link($url, $params));
 		die();
 	}
 	

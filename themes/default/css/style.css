@@ -127,7 +127,9 @@ form > div > input:focus {
 }
 
 button, .btn, form > div > input[type=submit] {
+	margin: 0;
 	padding: 12px;
+	text-decoration: none;
 	background: <?= $interact_bg ?>;
 	color: <?= $interact_color ?>;
 	display: inline-block;
