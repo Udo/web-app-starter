@@ -19,8 +19,8 @@
 	$GLOBALS['config'] = array(
 	
 		'url' => array(
-			'pretty' => true,
-			'root' => '/',
+			'pretty' => false,
+			'root' => '',
 			'content-type' => 'html',
 		),
 		'theme' => array(
