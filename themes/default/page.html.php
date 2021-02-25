@@ -14,6 +14,7 @@
   <script src="<?= $url_root ?>js/jquery.js"></script>
 
   <link rel="stylesheet" href="<?= $theme_path ?>css/">
+  <link rel="stylesheet" href="<?= $theme_path ?>fontawesome/css/all.min.css">
 
   <meta name="theme-color" content="#fafafa">
 </head>
@@ -21,7 +22,7 @@
 <body>
 	<nav>
 		<?= component('account/button') ?>
-		<a href="<?= URL::link('/') ?>"><?= cfg('site/name') ?></a><?php
+		<a href="<?= URL::link('') ?>"><?= cfg('site/name') ?></a><?php
 		foreach(cfg('menu') as $mk => $menu_item) if(!$menu_item['hidden'])	
 		{
 			?><a href="<?= URL::link($mk) ?>"><?= htmlspecialchars($menu_item['title']) ?></a><?

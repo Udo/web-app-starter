@@ -2,14 +2,15 @@
 	
 	if(!User::is_logged_in()) 
 	{ 
-		?><a style="float:right;" href="<?= URL::link('account/login') ?>">Log in</a><?php 
+		?><a style="float:right;" href="<?= URL::link('account/login') ?>">
+			<i class="fa fa-sign-in-alt"></i> Sign in</a><?php 
 	}
 	else
 	{
 		?>
-		<a style="float:right;" href="<?= URL::link('account/logout') ?>">Log out</a>
-		<a style="float:right;" href="<?= URL::link('account') ?>"><?= 
-			first(User::$data['nick'], User::$data['email']) ?></a>
+		<a style="float:right;" href="<?= URL::link('account') ?>">
+			<i class="fa fa-user-circle"></i>
+			<?= first(User::$data['nick'], User::$data['email']) ?></a>
 		<?php 
 	}
 	
