@@ -4,11 +4,11 @@
 	
 	<?= component('form/form', array('name' => 'login', 'fields' => array(
 		
-		'email' => array(
+		'uid' => array(
 			'type' => 'string',
-			'title' => 'Email',
-			'value' => $_REQUEST['email'], 
-			'placeholder' => 'you@example.com',
+			'title' => 'Username',
+			'value' => $_REQUEST['uid'], 
+			'placeholder' => 'your_name',
 			'validate' => 'mandatory',
 		),
 		'password' => array(
@@ -26,7 +26,7 @@
 		
 	), 'ondata' => function($data, &$form) {
 		
-		if(User::try_login($data['email'], $data['password']))
+		if(User::try_login($data['uid'], $data['password']))
 		{
 			URL::redirect(first($_REQUEST['whence'], ''));
 		}
@@ -47,17 +47,10 @@
 
 	<?= component('form/form', array('name' => 'signup', 'fields' => array(
 		
-		'email' => array(
+		'uid' => array(
 			'type' => 'string',
-			'title' => 'Email',
-			'value' => $_REQUEST['email'], 
-			'placeholder' => 'you@example.com',
-			'validate' => 'mandatory',
-		),
-		'nick' => array(
-			'type' => 'string',
-			'title' => 'Nick',
-			'value' => $_REQUEST['nick'], 
+			'title' => 'Username',
+			'value' => $_REQUEST['uid'], 
 			'placeholder' => 'your_nickname',
 			'validate' => 'mandatory',
 		),
@@ -83,9 +76,9 @@
 		
 	), 'ondata' => function($data, &$form) {
 		
-		if(User::try_create_account($data['email'], $form['data']['nick'], $data['password'], $data['password2']))
+		if(User::try_create_account($data['uid'], $data['password'], $data['password2']))
 		{
-			User::try_login($data['email'], $data['password']);
+			User::try_login($data['uid'], $data['password']);
 			URL::redirect(first($_REQUEST['whence'], ''));
 		}
 		else

@@ -142,6 +142,10 @@ button:hover, .btn:hover, form > div > input[type=submit]:hover {
 	opacity: 1.0;
 }
 
+form {
+	max-width: 800px;
+}
+
 .btn-highlight {
 	padding-bottom: 5px;
 	background: <?= $interact_bg ?>;	

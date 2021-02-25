@@ -30,13 +30,13 @@
 			
 			<input type="hidden" name="form-name" value="<?= $prop['name'] ?>"/><?php
 		
-		foreach($prop['fields'] as $k => $field)
-		{
-			$key = $field['field'] = first($field['field'], $k);
-			$field['value'] = first($prop['data'][$key], $field['value']);
-			$field['error'] = first($field['error'], $prop['errors'][$key]);
-			print(component('form/'.$field['type'], $field));
-		}
+			foreach($prop['fields'] as $k => $field)
+			{
+				$key = $field['field'] = first($field['field'], $k);
+				$field['value'] = first($prop['data'][$key], $field['value']);
+				$field['error'] = first($field['error'], $prop['errors'][$key]);
+				print(component('form/'.$field['type'], $field));
+			}
 			
 		?></form><?
 	}

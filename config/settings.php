@@ -19,15 +19,15 @@
 	$GLOBALS['config'] = array(
 	
 		'url' => array(
-			'pretty' => false,
-			'root' => false,
+			'pretty' => true,
+			'root' => '/',
 			'content-type' => 'html',
 		),
 		'theme' => array(
 			'path' => 'themes/default/',	
 		),
 		'site' => array(
-			'name' => 'My Site',
+			'name' => 'Web App Starter',
 			'default_page_title' => 'Home',
 		),
 		'users' => array(
