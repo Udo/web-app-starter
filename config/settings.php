@@ -24,7 +24,7 @@
 			'content-type' => 'html',
 		),
 		'theme' => array(
-			'path' => 'themes/default/',	
+			'path' => 'themes/light/',	
 		),
 		'site' => array(
 			'name' => 'Web App Starter',

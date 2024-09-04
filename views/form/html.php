@@ -1,7 +1,7 @@
 <?php return(function($prop) {
 	
 	?><div>
-		<label><?= htmlspecialchars($prop['title']) ?></label>
+		<label><?= htmlspecialchars(first($prop['title'])) ?></label>
 		<div><?= htmlspecialchars(first($prop['value'], $prop['default'])) ?></div>
 	</div><?php
 

@@ -1,5 +1,5 @@
 <?php return(function($prop) {
 	
-	?><input type="hidden" name="<?= $prop['field'] ?>" value="<?= htmlspecialchars($prop['value']) ?>"/><?php
+	?><input type="hidden" name="<?= $prop['field'] ?>" value="<?= htmlspecialchars(first($prop['value'])) ?>"/><?php
 		
 });

@@ -1,14 +1,13 @@
 <?php
 
-	$bg_color = '#111111';
-	$layer_color = 'rgba(255,255,255,0.1)';
-	$layer_color_hl = 'rgba(255,255,255,0.2)';
-	$text_color = '#aaaaaa';
-	$highlight = 'rgba(20,160,255,0.5)';
-	$interact_bg = '#3388cc;';
-	$interact_color = '#fff;';
-	$border = '1px solid rgba(150,150,150,0.3)';
-
+	$bg_color = '#f0f0f0';  // Light background color
+	$layer_color = 'rgba(0, 0, 0, 0.05)';  // Subtle gray for layers
+	$layer_color_hl = 'rgba(0, 0, 0, 0.1)';  // Slightly darker highlight for hover
+	$text_color = '#333333';  // Dark text for readability
+	$highlight = 'rgba(255, 140, 0, 0.8)';  // Orange highlight for contrast
+	$interact_bg = '#4CAF50';  // Green for interactive backgrounds (buttons, etc.)
+	$interact_color = '#fff';  // Keep white for text on buttons
+	$border = '1px solid rgba(0, 0, 0, 0.15)';  // Light border for input fields
 ?>
 
 @font-face {
@@ -46,7 +45,7 @@ body {
 	color: <?= $text_color ?>;
 }
 a {
-	color: white;
+	color: #1a73e8;  // Blue links
 }
 nav {
 	position: fixed;
@@ -73,11 +72,11 @@ nav > a:hover {
 	min-height: 480px;
 }
 #content > a {
-	color: blue;
+	color: <?= $highlight ?>;  // Highlighted links
 }
 footer {
 	text-align: center;
-	color: rgba(255,255,255,0.25);
+	color: rgba(0,0,0,0.5);
 	margin-top: 32px;
 }
 h1 {
@@ -102,7 +101,7 @@ form > div {
 
 form > div > label {
 	flex: 1;
-	background: rgba(0,0,0,0.1);
+	background: rgba(255,255,255,0.8);
 	max-width: 160px;
 	padding: 8px;
 }
@@ -117,13 +116,13 @@ form > div > input {
 	background: none;
 	padding: 8px;
 	color: <?= $text_color ?>;
-	background: rgba(0,0,0,0.25);
+	background: rgba(255,255,255,0.8);
 }
 
 form > div > input:focus {
 	outline: 1px solid <?= $interact_bg ?>;
 	color: <?= $interact_bg ?>;
-	background: rgba(0,0,0,0.5);
+	background: rgba(255,255,255,1);
 }
 
 button, .btn, form > div > input[type=submit] {
@@ -134,7 +133,7 @@ button, .btn, form > div > input[type=submit] {
 	color: <?= $interact_color ?>;
 	display: inline-block;
 	cursor: pointer;
-	opacity: 0.75;
+	opacity: 0.9;
 }
 
 button:hover, .btn:hover, form > div > input[type=submit]:hover {
@@ -158,7 +157,7 @@ form {
 
 .banner {
 	padding: 12px;
-	background: rgba(0,0,0,0.5);
+	background: rgba(255,255,255,0.9);
 }
 
 .error {
