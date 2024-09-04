@@ -1,8 +1,8 @@
 <?php
 
+	include('config/settings.php');
 	include('lib/ulib.php');
 	include('lib/db-file.php');
-	include('config/settings.php');
 	include('lib/render.php');
 
 	URL::MakeRoute();

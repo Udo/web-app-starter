@@ -133,3 +133,5 @@
 	{
 		print('<div class="banner">'.$s.'</div>');
 	}
+
+

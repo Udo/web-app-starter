@@ -222,11 +222,6 @@ function nibble($segdiv, &$cake, &$found = false)
   return $result;
 }
 
-function str_starts_with($s, $match)
-{
-  return(substr($s, 0, strlen($match)) == $match);
-}
-
 function str_ends_width($s, $match)
 {
   return(substr($s, -strlen($match)) == $match);
@@ -240,7 +235,7 @@ function truncate($s, $maxLength, $indicator = '')
     return(substr($s, 0, $maxLength).$indicator);
 }
 
-function match($subject, $criteria)
+function match_with($subject, $criteria)
 {
   $result = true;
   foreach($criteria as $k => $v)

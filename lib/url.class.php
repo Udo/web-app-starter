@@ -59,7 +59,7 @@ class URL
 			if(substr($s, 0, 1) != '.' && $s != '') # strip unnecessary prefixes
 				$seg[] = $s;
 		$route['l-path'] = implode('/', $seg);
-		if(substr($seg[0], 0, 1) == ':')
+		if($seg[0] && substr($seg[0], 0, 1) == ':')
 		{
 			$route['page'] = substr($route['l-path'], 1);
 		}
