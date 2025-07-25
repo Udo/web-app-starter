@@ -1,38 +1,71 @@
 class EventEmitter {
 	constructor() {
-		/** Map<eventName, Set<Function>> */
+		/** Map<eventName, Map<slotKey|Symbol, Function>> */
 		this._topics = new Map();
 	}
 
-	on(topic, handler) {
-		let set = this._topics.get(topic);
-		if (!set) {
-			set = new Set();
-			this._topics.set(topic, set);
+	/**
+	 * Subscribe to `topic`. If `slot_key` is provided (truthy),
+	 * it dedupes by that key; otherwise a unique Symbol is used.
+	 * Returns an unsubscribe fn.
+	 */
+	on(topic, handler, slot_key = null) {
+		let map = this._topics.get(topic);
+		if (!map) {
+			map = new Map();
+			this._topics.set(topic, map);
 		}
-		set.add(handler);
-		return () => this.off(topic, handler);
+		// use the provided slot_key or a fresh Symbol()
+		const key = slot_key != null ? slot_key : Symbol();
+		map.set(key, handler);
+		return () => this.off(topic, key);
 	}
 
-	off(topic, handler) {
-		const set = this._topics.get(topic);
-		if (!set) return;
-		set.delete(handler);
-		if (set.size === 0) this._topics.delete(topic);
-	}
+	/**
+	 * Unsubscribe by handler function or by slot_key.
+	 */
+	off(topic, handlerOrSlotKey) {
+		const map = this._topics.get(topic);
+		if (!map) return;
 
-	emit(topic, ...args) {
-		let count = 0;
-		const set = this._topics.get(topic);
-		if (!set) return count;
-		for (const handler of [...set]) {
-			const res = handler(...args);
-			count++;
-			if (res === 'remove_handler') {
-				set.delete(handler);
+		// if it matches a slotKey directly, remove it
+		if (map.has(handlerOrSlotKey)) {
+			map.delete(handlerOrSlotKey);
+		} else {
+			// otherwise assume it's a function: remove all matching fns
+			for (const [key, fn] of map.entries()) {
+				if (fn === handlerOrSlotKey) {
+					map.delete(key);
+				}
 			}
 		}
-		if (set.size === 0) this._topics.delete(topic);
+
+		if (map.size === 0) {
+			this._topics.delete(topic);
+		}
+	}
+
+	/**
+	 * Emit to all handlers on `topic`. Handlers returning
+	 * 'remove_handler' are auto-removed.
+	 * Returns the number of handlers invoked.
+	 */
+	emit(topic, ...args) {
+		let count = 0;
+		const map = this._topics.get(topic);
+		if (!map) return count;
+
+		for (const [key, fn] of Array.from(map.entries())) {
+			const res = fn(...args);
+			count++;
+			if (res === 'remove_handler') {
+				map.delete(key);
+			}
+		}
+
+		if (map.size === 0) {
+			this._topics.delete(topic);
+		}
 		return count;
 	}
 }
