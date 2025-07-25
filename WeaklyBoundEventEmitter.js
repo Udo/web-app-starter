@@ -41,7 +41,11 @@ class WeaklyBoundEventEmitter {
 			for (const ref of [...set]) {
 				const fn = ref.deref();
 				if (fn) {
-					fn(...args);
+					let res = fn(...args);
+					if(res === 'remove_handler') {
+						set.delete(ref);
+						this._cleanup.unregister(ref);
+					}
 				} else {
 					// handler was GC’d—cleanup
 					set.delete(ref);
