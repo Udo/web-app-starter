@@ -35,7 +35,7 @@ if (( ${#patterns[@]} == 0 )); then
     exit 1
 fi
 
-grep_opts=( -nR --color=tty )
+grep_opts=( -nR -H --color=tty )
 if ! $csensitive; then
     grep_opts+=( -i )
 fi
