@@ -2,16 +2,17 @@
 
 	include('config/settings.php');
 	include('lib/ulib.php');
-	include('lib/db-file.php');
-	include('lib/render.php');
+	include('lib/components.php');
 
 	URL::MakeRoute();
 	User::init();
 
-	ob_start();
-	print(component(first(URL::$route['l-path'], 'index'), array($prop['id'] => $_REQUEST['attr']['id'])));
-	$content = ob_get_clean();
+	Profiler::log('ready');
 
-	include(cfg('theme/path').'/page.'.URL::$route['content-type'].'.php');
+	ob_start();
+	print(component('views/'.first(URL::$route['l-path'], 'index'), array($prop['id'] => $_REQUEST['attr']['id'])));
+	URL::$fragments['main'] = ob_get_clean();
+
+	include(cfg('theme/path').'/page.'.URL::$page_type.'.php');
 
 	Log::audit('page:'.URL::$route['page'], URL::$route['l-path']);

@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+csensitive=false
+patterns=()
+
+# Parse flags and patterns
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -c|--case-sensitive)
+            csensitive=true
+            shift
+            ;;
+        -h|--help)
+            echo "Usage: $0 [-c|--case-sensitive] <pattern> [<pattern>...]" >&2
+            exit 1
+            ;;
+        -* )
+            echo "Unknown option: $1" >&2
+            echo "Usage: $0 [-c|--case-sensitive] <pattern> [<pattern>...]" >&2
+            exit 1
+            ;;
+        * )
+            patterns+=("$1")
+            shift
+            ;;
+    esac
+done
+
+# Ensure at least one pattern is provided
+if (( ${#patterns[@]} == 0 )); then
+    echo "Usage: $0 [-c|--case-sensitive] <pattern> [<pattern>...]" >&2
+    exit 1
+fi
+
+# Build common grep options
+grep_opts=( -nR -H --color=tty )
+if ! $csensitive; then
+    grep_opts+=( -i )
+fi
+
+# Build -e arguments for each pattern
+pattern_opts=()
+for pat in "${patterns[@]}"; do
+    pattern_opts+=( -e "$pat" )
+done
+
+# Define search paths
+declare -a php_sea=(".")
+declare -a css_sea=(".")
+declare -a js_sea=(".")
+
+# Search PHP files
+for vs in "${php_sea[@]}"; do
+    grep "${grep_opts[@]}" --include="*.php" "${pattern_opts[@]}" "$vs"
+done
+
+# Search CSS files (exclude fontawesome)
+for vs in "${css_sea[@]}"; do
+    grep "${grep_opts[@]}" --include="*.css" "${pattern_opts[@]}" "$vs" \
+        | grep -iv "fontawesome"
+done
+
+# Search JS files
+for vs in "${js_sea[@]}"; do
+    grep "${grep_opts[@]}" --include="*.js" "${pattern_opts[@]}" "$vs"
+done

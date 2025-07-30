@@ -8,6 +8,7 @@ class URL
 	static $error = '';
 	static $title = 'TITLE';
 	static $page_type = 'html';
+	static $fragments = [];
 	
 	# extracts the locator string from parameters or the URI 
 	static function ParseRequestURI()

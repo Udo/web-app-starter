@@ -10,6 +10,16 @@ spl_autoload_register(function ($class_name) {
 });
 
 Profiler::start();
+
+function include_js($src_file)
+{
+	?><script src="<?= cfg('url/root').$src_file ?>?v=<?= filemtime($src_file) ?>"></script><?
+}
+
+function include_css($src_file)
+{
+	?><link rel="stylesheet" href="<?= cfg('url/root').$src_file ?>?v=<?= filemtime($src_file) ?>" /><?
+}
 	
 # **************************** GENERAL UTILITY FUNCTIONS ******************************
 
@@ -48,47 +58,6 @@ function write_to_file($filename, $content)
 # **************************** ARRAY FUNCTIONS ******************************
 
 /**
-	* Iterates over the $list, calls $func($item, $key) on each entry,
-	* returns a list with all the return values from calls to $func.
-	*/
-function map($list, $func)
-{
-	$result = array();
-	if($list !== null && $list !== false)
-	{
-		if(!is_array($list)) $list = array($list);
-		foreach($list as $key => $item)
-		{
-			$v = $func($item, $key);
-			if($v !== null)
-				$result[] = $v;
-		}
-	}
-	return($result);
-}
-
-
-/**
-	* Iterates over the $list, calls $func($item, $key) on each entry,
-	* returns a list with all the non-null return values from calls to $func.
-	*/
-function reduce($list, $func)
-{
-	$result = null;
-	if($list !== null && $list !== false)
-	{
-		if(!is_array($list)) $list = array($list);
-		foreach($list as $key => $item)
-		{
-			$v = $func($result, $item, $key);
-			if($v !== null)
-				$result = $v;
-		}
-	}
-	return($result);
-}
-
-/**
 	* Returns a value from the $GLOBALS['config'] array identified by $key.
 	* Sub-array values can be addressed by using the '/' character as a separator.
 	*/
@@ -109,34 +78,6 @@ function cfg($key)
 
 
 # **************************** STRING/FORMATTING FUNCTIONS ******************************
-
-/**
-	* Read a key-value text into a hash map.
-	*/
-function strings_to_array($text, $params = array())
-{
-	$result = array();	
-	$stringArray = explode("\n", $text);
-	if (is_array($stringArray))
-		foreach ($stringArray as $line)
-		{
-			$key = CutSegment('=', $line);
-			$line = trim($line);
-			if(substr($key, -1) == '+')
-			{
-				// add this to array by key
-				$key = substr($key, 0, -1);
-				$result[$key][] = $line;
-			}
-			else if(substr($line, 0, 1) == '[' && substr($line, -1) == ']')
-			{
-				foreach(explode(',', substr($line, 1, -1)) as $seg)
-					$result[$key][] = $seg;
-			}
-			else if ($key != '') $result[$key] = $line;
-		}
-	return($result);
-}
 
 /**
 	* Convert any base number into another number of another base system.
@@ -223,37 +164,13 @@ function nibble($segdiv, &$cake, &$found = false)
 	return $result;
 }
 
-function str_ends_width($s, $match)
+function make_hash($s = false, $length = 10)
 {
-	return(substr($s, -strlen($match)) == $match);
+	if($s === false) $s = time().random_int(0, 2147483647);
+	$s = strtolower(substr(trim($s), 0, 64));
+	return(substr(base_convert_ex(
+		sha1(sha1('qw0e983124o521öl34u9087'.$s)),
+		'0123456789abcdef',
+		'0123456789abcdefghijklmnopqrstuvwxyz'
+	), -$length));
 }
-
-function truncate($s, $maxLength, $indicator = '')
-{
-	if(strlen($s) <= $maxLength) 
-		return($s);
-	else
-		return(substr($s, 0, $maxLength).$indicator);
-}
-
-function match_with($subject, $criteria)
-{
-	$result = true;
-	foreach($criteria as $k => $v)
-	{
-		if($subject[$k] != $v) $result = false;
-	}
-	return($result);
-}
-
-function get_browser_info()
-{
-	return(array(
-		'ip' => first($_SERVER['HTTP_CF_CONNECTING_IP'], $_SERVER['REMOTE_ADDR']),
-		'agent' => $_SERVER['HTTP_USER_AGENT'],
-		'lang' => $_SERVER['HTTP_ACCEPT_LANGUAGE'],
-		'cookie' => $_SERVER['HTTP_COOKIE'],
-		));
-}
-
-
