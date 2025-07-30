@@ -65,7 +65,7 @@
 </div>
 
 <div class="card">
-<h2>📝 Usage Examples</h2>
+<h2>Usage Examples</h2>
 <div style="background: linear-gradient(135deg, var(--surface) 0%, var(--surface-elevated) 100%); padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--border); margin: 1rem 0; position: relative; overflow: hidden;">
     <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--success) 0%, var(--primary) 50%, var(--secondary) 100%);"></div>
     <div style="display: flex; align-items: center; margin-bottom: 1rem;">

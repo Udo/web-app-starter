@@ -26,7 +26,7 @@
 <div class="demo-section">
     <div class="demo-container">
         <h2>Demo</h2>
-        <p>Try out our components in action</p>
+        <p>Try our UNBELIEVABLE components in action</p>
         
         <div class="demo-grid">
             <div class="demo-card">

@@ -1,7 +1,7 @@
 <?php return [
     'render' => function($prop) {
-        $title = $prop['title'] ?? 'Welcome to the Future';
-        $subtitle = $prop['subtitle'] ?? 'Experience modern web development with our cutting-edge framework';
+        $title = $prop['title'] ?? 'Welcome to the Present';
+        $subtitle = $prop['subtitle'] ?? 'Experience no-quite-modern web development with our cutting-edge framework';
         $cta_text = $prop['cta_text'] ?? 'Get Started';
         $cta_link = $prop['cta_link'] ?? '#';
         
