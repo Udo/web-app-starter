@@ -51,9 +51,16 @@ component_declare('name', $definition)        // Inline declaration
 
 ### Database
 ```php
-DB::query($sql, $params)     // Execute query
-DB::fetch($sql, $params)     // Single row
-DB::fetchAll($sql, $params)  // Multiple rows
+DB::Query($sql, $params)            // Execute any SQL query
+DB::Get($sql, $params)              // Get multiple rows as array
+DB::GetRowWithQuery($sql, $params)  // Get single row
+DB::GetRow($table, $keyvalue)       // Get row by primary key
+DB::GetRow($table, $id, $keyname)   // Get row by specific key
+DB::GetRowsMatch($table, $criteria) // Get rows matching criteria
+DB::Insert($table, $data)           // Insert new row, returns ID
+DB::Commit($table, $data)           // Insert or update (REPLACE)
+DB::Update($table, $where, $data)   // Update existing rows
+DB::RemoveRow($table, $keyvalue)    // Delete row by key
 ```
 
 ### Logging
