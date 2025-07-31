@@ -212,6 +212,53 @@
             }
         }
         </style>
+        <script>
+        $.ready(() => {
+            const heroTitle = document.querySelector('.hero-title');
+            if (heroTitle) {
+                const text = heroTitle.textContent;
+                heroTitle.textContent = '';
+                
+                let i = 0;
+                const typeWriter = () => {
+                    if (i < text.length) {
+                        heroTitle.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(typeWriter, 50);
+                    }
+                };
+                
+                // Start typing animation after a short delay
+                setTimeout(typeWriter, 500);
+            }
+            const heroSection = document.querySelector('.hero-section');
+            if (heroSection) {
+                createFloatingParticles(heroSection);
+            }
+            function createFloatingParticles(container) {
+                const particleCount = 20;
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    
+                    Object.assign(particle.style, {
+                        position: 'absolute',
+                        width: Math.random() * 4 + 1 + 'px',
+                        height: Math.random() * 4 + 1 + 'px',
+                        background: 'rgba(255, 255, 255, 0.3)',
+                        borderRadius: '50%',
+                        left: Math.random() * 100 + '%',
+                        top: Math.random() * 100 + '%',
+                        animation: `float ${Math.random() * 3 + 2}s ease-in-out infinite`,
+                        animationDelay: Math.random() * 2 + 's'
+                    });
+                    
+                    container.appendChild(particle);
+                }
+            }
+        });
+        </script>
         <?php
 
     },
