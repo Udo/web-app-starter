@@ -20,7 +20,7 @@ location ~ ^/(config|lib|private|\.git)/ {
 	return 404;
 }
 location ~ \.php$ {
-	fastcgi_pass unix:/var/run/php/php-fpm.sock; # Adjust socket path as needed
+	fastcgi_pass unix:/var/run/php/php-fpm.sock; 
 	fastcgi_index index.php;
 	fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 	include fastcgi_params;
