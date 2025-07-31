@@ -1,11 +1,11 @@
 # Web App Starter
 
-Simple web app starter package, expects to run in a domain's root directory.
+Simple web app starter package, expects to run in a domain's root directory but will run everywhere as long as cfg('url/pretty') is set to false.
 
 Add this to your nginx config to protect sensitive data directories:
 
 ```
-       
+			 
 	location /private/ {
 		deny all;
 		return 404;
@@ -26,8 +26,8 @@ would look like this:
 ```
 Array
 (
-    [page] => index
-    [l-path] => some/url/path
+		[page] => index
+		[l-path] => some/url/path
 )
 ``` 
 
@@ -40,35 +40,51 @@ view uses this to invoke the correct sub-view.
 
 ## Components
 
-This uses the idea of immediate components to render HTML. For example, a given view may look like this:
+Components for reusable UI elements. Components are PHP files that return an array with render functions and metadata.
+
+### Component Structure
+
+Components are located in the `components/` directory and follow this structure:
 
 ```php
-<? return(function($prop) { ?>
+<?php return [
 
-<!doctype html><html><head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  </head>
-  <body>  
-    <?= component('nav/shortcut-bar') ?>
-    <?= component('nav/menu', 'menu') ?>
-    <?= component('nav/content', array('id' => 'content')) ?>
-  </body>  
-</html><? });
+	'render' => function($prop) {
+			return '<div class="my-component">' . $prop['content'] . '</div>';
+	},
+	
+	'about' => 'Description of what this component does',
+
+];
 ```
 
-This would in turn render the components `'nav/shortcut-bar'`, `'nav/menu'`, and `'nav/content'`.
-Components are located in `views/`. The function signature of a component() call looks like this:
+### Using Components
 
 ```php
-component($file_name, $id_override = false, $prop = array())
+<?= component('components/basic/button', [
+		'text' => 'Click me',
+		'type' => 'primary'
+]) ?>
 ```
 
-`$file_name` is the component's file name withint `views/`. Invoking the component() executes that file.
-If the file returns a lambda function, that function gets called every time the component is invoked. If the
-file returns a text, that text gets returned every time the component is invoked.
+**Using Specific Render Methods:**
+```php
+<?= component('components/layout/section:begin', ['class' => 'hero']) ?>
+		<h1>Content here</h1>
+<?= component('components/layout/section:end') ?>
+```
 
-`$prop` is an optional parameter to communicate further parameters to the component, and this
-corresponds to the `$prop` parameter being passed to a component's lambda function.
+### Inline Components
+
+You can also declare components directly in code:
+
+```php
+	component_declare('my-button', [
+		'render' => function($prop) { 
+			return "<button class='{$prop['class']}'>{$prop['text']}</button>"; 
+		}
+	]);
+```
 
 ## Logging
 
@@ -89,45 +105,30 @@ Log::audit($module, $text) /* writes to system journal */
 A basic profiling fixture.
 
 ```php
-Profiler::log($text, $backtrace = false) 
+Profiler::log($text, $indent_level = 0) 
 ```
 
 `$text` name/text describing the checkpoint to be profiled.
-`$backtrace` optional data attachment.
 
 Profiler logs are not committed to disk. Log data for the current request is stored in
 `Profiler::$log`.
 
-## ulib Convenience Functions
+## Batteries included
 
-### function first($p1, ...)
+- lib/ulib.php - convenience functions
+- lib/profiler.class.php - profiling
+- lib/log.class.php - logging
+- lib/url.class.php - URL routing
+- lib/components.php - component rendering
+- lib/odt.class.php - ODT document generator
+- lib/db.class.php - database access
 
-Takes any number of parameters and returns the first that is not null or empty.
+- js/morphdom.js - DOM diffing
+- js/uquery.js - DOM manipulation (my attempt at keeping the good parts of jQuery)
+- js/site.js - site-wide JS, as a starting point
+- js/macrobars.js - JS templating
 
-### function write_to_file($filename, $content)
-
-Appends `$content` to `$filename`.
-
-### function map($list, $func)
-
-Performs a map operation on `$list` using the `$func` predicate and returns a new array with the result.
-
-### function reduce($list, $func)
-
-Like `map()` but only adds results on entries where `$func` does not return null.
-
-### function cfg($key)
-
-Shortcut for accessing the configuration global `$GLOBALS['config']`. For example, a `$key` of `'db/host'` would 
-translate to `$GLOBALS['config']['db']['host']`.
-
-### function nibble($segdiv, &$cake, &$found = false)
-
-Cuts off the part of `&$cake` before the first occurrence of `$segdiv`, and returns that part.
-
-### function starts_with($s, $match) / function ends_with($s, $match)
-
-Returns true if `$s` starts/ends with `$match`.
+- js/ag-grid - ag-Grid
 
 ## License (MIT Open Source)
 
