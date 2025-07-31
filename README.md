@@ -2,21 +2,43 @@
 
 Simple web app starter package, expects to run in a domain's root directory but will run everywhere as long as cfg('url/pretty') is set to false.
 
-Add this to your nginx config to protect sensitive data directories:
 
-```
-			 
-	location /private/ {
-		deny all;
-		return 404;
-	}
+## Nginx Configuration
 
-	location /.git {
-		deny all;
-		return 404;
-	}
-	
+### Basic Security (Required)
+```nginx
+location /private/ { /* replace this with your private directory */
+	deny all;
+	return 404;
+}
+location /.git {
+	deny all;
+	return 404;
+}
 ```
+
+### Pretty URLs Support (Optional)
+For pretty URLs (`cfg('url/pretty') = true`), add this configuration to enable clean URLs like `/users/profile` instead of `/?users/profile`:
+
+```nginx
+location / {
+	try_files $uri $uri/ /index.php?$args;
+}
+
+# the rest of the owl
+location ~ ^/(config|lib|private)/ {
+	deny all;
+	return 404;
+}
+location ~ \.php$ {
+	fastcgi_pass unix:/var/run/php/php-fpm.sock; # Adjust socket path as needed
+	fastcgi_index index.php;
+	fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+	include fastcgi_params;
+}
+```
+
+**Note**: Without pretty URL configuration, set `cfg('url/pretty') = false` in your config and URLs will use query string format: `/?page&param=value`
 
 ## Routing
 
