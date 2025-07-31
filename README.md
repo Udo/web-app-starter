@@ -2,6 +2,7 @@
 
 Simple web app starter package, expects to run in a domain's root directory but will run everywhere as long as cfg('url/pretty') is set to false.
 
+Don't be afraid of server-side rendering! But we have JS options too.
 
 ## Nginx Configuration
 
