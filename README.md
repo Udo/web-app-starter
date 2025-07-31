@@ -122,7 +122,7 @@ Profiler logs are not committed to disk. Log data for the current request is sto
 `Profiler::$log`.
 
 ## Batteries included
-
+```
 - lib/ulib.php - convenience functions
 - lib/profiler.class.php - profiling
 - lib/log.class.php - logging
@@ -137,7 +137,7 @@ Profiler logs are not committed to disk. Log data for the current request is sto
 - js/macrobars.js - JS templating
 
 - js/ag-grid - ag-Grid
-
+```
 ## License (MIT Open Source)
 
 Copyright 2018 udo@openfu.com
