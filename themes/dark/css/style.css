@@ -198,7 +198,6 @@ h3 {
 }
 
 #content > div:hover, .block:hover, .card:hover {
-	transform: translateY(-2px);
 	box-shadow: var(--shadow-lg);
 	border-color: var(--border-hover);
 }

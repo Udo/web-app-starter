@@ -36,7 +36,7 @@
                     <div class="testimonial-card" style="animation-delay: <?= $index * 0.2 ?>s">
                         <div class="testimonial-content">
                             <div class="quote-icon">"</div>
-                            <p><?= htmlspecialchars($testimonial['content']) ?></p>
+                            <p><?= safe($testimonial['content']) ?></p>
                             <div class="stars">
                                 <?php for($i = 0; $i < $testimonial['rating']; $i++): ?>
                                     <span class="star">★</span>
@@ -44,10 +44,10 @@
                             </div>
                         </div>
                         <div class="testimonial-author">
-                            <img src="<?= htmlspecialchars($testimonial['avatar']) ?>" alt="<?= htmlspecialchars($testimonial['name']) ?>" class="avatar">
+                            <img src="<?= safe($testimonial['avatar']) ?>" alt="<?= safe($testimonial['name']) ?>" class="avatar">
                             <div class="author-info">
-                                <div class="author-name"><?= htmlspecialchars($testimonial['name']) ?></div>
-                                <div class="author-role"><?= htmlspecialchars($testimonial['role']) ?></div>
+                                <div class="author-name"><?= safe($testimonial['name']) ?></div>
+                                <div class="author-role"><?= safe($testimonial['role']) ?></div>
                             </div>
                         </div>
                     </div>

@@ -11,17 +11,48 @@ spl_autoload_register(function ($class_name) {
 
 Profiler::start();
 
+function get_file_location($file, $error_if_not_found = true)
+{
+	if(file_exists($file)) return $file;
+	foreach($GLOBALS['config']['site']['include_paths'] as $path)
+	{
+		if(file_exists($path.$file)) return $path.$file;
+	}
+	if($error_if_not_found)
+		die('file not found: '.$file);
+	return false;
+}
+
 function include_js($src_file)
 {
-	?><script src="<?= cfg('url/root').$src_file ?>?v=<?= filemtime($src_file) ?>"></script><?
+	if(!($file_location = get_file_location($src_file))) return;
+	?><script src="<?= cfg('url/root').$file_location ?>?v=<?= filemtime($file_location) ?>"></script><?
 }
 
 function include_css($src_file)
 {
-	?><link rel="stylesheet" href="<?= cfg('url/root').$src_file ?>?v=<?= filemtime($src_file) ?>" /><?
+	if(!($file_location = get_file_location($src_file))) return;
+	?><link rel="stylesheet" href="<?= cfg('url/root').$file_location ?>?v=<?= filemtime($file_location) ?>" /><?
 }
 	
 # **************************** GENERAL UTILITY FUNCTIONS ******************************
+
+// escapes a string for use in HTML attributes
+function asafe($s)
+{
+	return htmlspecialchars(str_replace(array("\r", "\n"), ' ', $s), ENT_QUOTES, 'UTF-8');
+}
+
+// escapes a string for use in HTML text
+function safe($s)
+{
+	return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
+}
+
+function jsafe($s)
+{
+	return json_encode($s);
+}
 
 /**
 	* Can have any number of arguments. Returns the first of its arguments that is not false, empty string, or null.

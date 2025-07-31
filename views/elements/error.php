@@ -1,5 +1,5 @@
 <?php return(function($prop) {
 	
-	?><div class="banner error"><?= htmlspecialchars($prop['text']) ?></div><?
+	?><div class="banner error"><?= safe($prop['text']) ?></div><?
 	
 });

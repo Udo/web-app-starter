@@ -10,7 +10,7 @@
 
         'end' => function($prop) {
             ?><script>
-                console.log('Component <?= htmlspecialchars($prop['id']) ?> finalized');
+                console.log('Component <?= safe($prop['id']) ?> finalized');
             </script><?php
             return('</div>');
         },
@@ -27,7 +27,7 @@
 
 	function component_component_error_banner($s)
 	{
-		?><div class="banner"><?= htmlspecialchars($s) ?></div><?
+		?><div class="banner"><?= safe($s) ?></div><?
 	}
 
     /**

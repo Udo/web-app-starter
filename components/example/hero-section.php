@@ -8,10 +8,10 @@
         ?>
         <div class="hero-section">
             <div class="hero-content">
-                <h1 class="hero-title"><?= htmlspecialchars($title) ?></h1>
-                <p class="hero-subtitle"><?= htmlspecialchars($subtitle) ?></p>
+                <h1 class="hero-title"><?= safe($title) ?></h1>
+                <p class="hero-subtitle"><?= safe($subtitle) ?></p>
                 <div class="hero-actions">
-                    <a href="<?= htmlspecialchars($cta_link) ?>" class="btn btn-large hero-cta"><?= htmlspecialchars($cta_text) ?></a>
+                    <a href="<?= safe($cta_link) ?>" class="btn btn-large hero-cta"><?= safe($cta_text) ?></a>
                     <a href="#features" class="btn btn-outline btn-large">Learn More</a>
                 </div>
             </div>
@@ -72,7 +72,7 @@
             padding: 0;
             box-shadow: none;
             border: none;
-            color: white;
+            color: var(--text-primary);
         }
         
         .hero-title::before {
@@ -84,7 +84,7 @@
             margin-bottom: 2rem;
             opacity: 0.9;
             line-height: 1.6;
-            color: white;
+            color: var(--text-primary);
         }
         
         .hero-actions {
@@ -101,9 +101,6 @@
         
         .hero-cta:hover {
             background: var(--surface-hover);
-            transform: translateY(-2px);
-        }
-            background: #f8fafc;
             transform: translateY(-2px);
         }
         

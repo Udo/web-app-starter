@@ -11,11 +11,11 @@
         <div class="cta-section">
             <div class="cta-container">
                 <div class="cta-content">
-                    <h2 class="cta-title"><?= htmlspecialchars($title) ?></h2>
-                    <p class="cta-subtitle"><?= htmlspecialchars($subtitle) ?></p>
+                    <h2 class="cta-title"><?= safe($title) ?></h2>
+                    <p class="cta-subtitle"><?= safe($subtitle) ?></p>
                     <div class="cta-actions">
-                        <a href="<?= htmlspecialchars($cta_link) ?>" class="btn btn-large cta-primary"><?= htmlspecialchars($cta_text) ?></a>
-                        <a href="<?= htmlspecialchars($secondary_link) ?>" class="btn btn-outline btn-large cta-secondary"><?= htmlspecialchars($secondary_text) ?></a>
+                        <a href="<?= safe($cta_link) ?>" class="btn btn-large cta-primary"><?= safe($cta_text) ?></a>
+                        <a href="<?= safe($secondary_link) ?>" class="btn btn-outline btn-large cta-secondary"><?= safe($secondary_text) ?></a>
                     </div>
                 </div>
                 <div class="cta-visual">

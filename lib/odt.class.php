@@ -255,7 +255,7 @@ class ODT
 
 	function odt_entities($raw)
 	{
-		return str_replace(chr(10), '<text:line-break/>', htmlspecialchars($raw, ENT_XML1 | ENT_QUOTES, 'UTF-8'));
+		return str_replace(chr(10), '<text:line-break/>', safe($raw, ENT_XML1 | ENT_QUOTES, 'UTF-8'));
 	}
 
 	function break_into_segments($s)

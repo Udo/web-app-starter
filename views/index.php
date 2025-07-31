@@ -1,14 +1,17 @@
-<?= component('components/hero-section', [
-    'title' => 'Build Amazing Impressive Stunning Web Apps',
+<?php include_css('marketing.css') ?>
+
+<?= component('components/example/hero-section', [
+    'title' => 'Stunning Apps',
     'subtitle' => 'Experience the power of super bloated PHP development with our gigantic and truly unwieldy component-based framework. 
-		Fast, secure, and developer-friendly.',
+		Seriously though this page only serves as an example repository of
+        different styles and blocks.',
     'cta_text' => 'Get Started Free(mium)',
     'cta_link' => '#features'
 ]) ?>
 
-<?= component('components/features-grid') ?>
+<?= component('components/example/features-grid') ?>
 
-<?= component('components/stats-section', [
+<?= component('components/example/stats-section', [
     'stats' => [
         ['number' => '10K+', 'label' => 'Happy Vibe Coders'],
         ['number' => '<1s', 'label' => 'Page Load Time'],
@@ -17,11 +20,11 @@
     ]
 ]) ?>
 
-<?= component('components/brands-showcase') ?>
+<?= component('components/example/brands-showcase') ?>
 
-<?= component('components/testimonials') ?>
+<?= component('components/example/testimonials') ?>
 
-<?= component('components/pricing-table') ?>
+<?= component('components/example/pricing-table') ?>
 
 <div class="demo-section">
     <div class="demo-container">
@@ -67,101 +70,54 @@
     </div>
 </div>
 
-<?= component('components/cta-section', [
+<?= component('components/example/cta-section', [
     'title' => 'Ready to Transform Your Development?',
     'subtitle' => 'Join thousands of developers who have already modernized their workflow with our framework.',
     'cta_text' => 'Start Your Project',
     'secondary_text' => 'View GitHub'
 ]) ?>
 
-<style>
-.demo-section {
-    padding: 4rem 0;
-    background: var(--bg-color);
-}
+<div class="card">
+<h2>Component Development Guidelines</h2>
+<div class="guidelines-grid">
+    <div class="guideline-item" style="border-left-color: var(--primary);">
+        <span class="guideline-icon">🏷️</span>
+        <span>Use semantic HTML5 elements</span>
+    </div>
+    <div class="guideline-item" style="border-left-color: var(--secondary);">
+        <span class="guideline-icon">🎨</span>
+        <span>Implement CSS custom properties for theming</span>
+    </div>
+    <div class="guideline-item" style="border-left-color: var(--accent);">
+        <span class="guideline-icon">📱</span>
+        <span>Add responsive design with mobile-first approach</span>
+    </div>
+    <div class="guideline-item" style="border-left-color: var(--success);">
+        <span class="guideline-icon">♿</span>
+        <span>Include accessibility attributes (ARIA, alt text)</span>
+    </div>
+    <div class="guideline-item" style="border-left-color: var(--warning);">
+        <span class="guideline-icon">⚡</span>
+        <span>Use progressive enhancement for JavaScript features</span>
+    </div>
+</div>
+</div>
 
-.demo-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-    text-align: center;
-}
+<div class="card">
+<h2>Simple Data Table (ag-Grid)</h2>
+<p>Basic data table with auto-generated columns, sorting, and filtering:</p>
+<?= component('components/data/table', [
+    'items' => [
+        ['name' => 'John Doe', 'age' => 25, 'gender' => 'male', 'department' => 'Engineering', 'salary' => 75000, 'active' => true],
+        ['name' => 'Jane Smith', 'age' => 30, 'gender' => 'female', 'department' => 'Design', 'salary' => 82000, 'active' => true],
+        ['name' => 'Bob Johnson', 'age' => 35, 'gender' => 'male', 'department' => 'Marketing', 'salary' => 68000, 'active' => false],
+        ['name' => 'Alice Brown', 'age' => 40, 'gender' => 'female', 'department' => 'Engineering', 'salary' => 95000, 'active' => true],
+        ['name' => 'Dave Wilson', 'age' => 45, 'gender' => 'male', 'department' => 'Sales', 'salary' => 72000, 'active' => true],
+        ['name' => 'Eve Davis', 'age' => 50, 'gender' => 'non-binary', 'department' => 'Management', 'salary' => 110000, 'active' => true],
+        ['name' => 'Charlie Miller', 'age' => 28, 'gender' => 'male', 'department' => 'Engineering', 'salary' => 78000, 'active' => true],
+        ['name' => 'Sarah Taylor', 'age' => 33, 'gender' => 'female', 'department' => 'Design', 'salary' => 85000, 'active' => false],
+    ],
+    'height' => '350px'
+]) ?>
+</div>
 
-.demo-container h2 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.demo-container > p {
-    font-size: 1.25rem;
-    color: var(--text-secondary);
-    margin-bottom: 3rem;
-}
-
-.demo-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-    gap: 2rem;
-    margin-top: 3rem;
-}
-
-.demo-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-xl);
-    padding: 2.5rem;
-    box-shadow: var(--shadow-md);
-    text-align: left;
-}
-
-.demo-card h3 {
-    margin-bottom: 2rem;
-    color: var(--text-primary);
-    text-align: center;
-}
-
-.demo-form {
-    max-width: none;
-}
-
-.button-showcase {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    justify-content: center;
-}
-
-.notification-demo {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-@media (max-width: 768px) {
-    .demo-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-    
-    .demo-card {
-        padding: 2rem 1.5rem;
-    }
-    
-    .button-showcase {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .button-showcase .btn {
-        width: 100%;
-        max-width: 250px;
-    }
-}
-</style>
-
-<?= component('components/theme-switcher') ?>

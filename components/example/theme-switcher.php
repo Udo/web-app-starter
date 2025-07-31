@@ -41,11 +41,12 @@
             
             if (!themeToggle) return;
             
-            // Get current theme from localStorage or default to light
-            let currentTheme = localStorage.getItem('theme') || 'light';
+            let defaultTheme = 'dark'; 
+            let currentTheme = localStorage.getItem('theme') || defaultTheme;
             
             // Apply current theme on load
-            applyTheme(currentTheme);
+            if(currentTheme != defaultTheme)
+                applyTheme(currentTheme);
             
             // Handle theme toggle click
             themeToggle.addEventListener('click', function() {

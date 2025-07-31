@@ -27,11 +27,13 @@
 </head>
 
 <body>
+	<?= component('components/example/theme-switcher') ?>
+	<?= component('components/basic/cookie-consent') ?>
 	<nav>
 		<a href="<?= URL::link('') ?>"><?= cfg('site/name') ?></a><?php
 		foreach(cfg('menu') as $mk => $menu_item) if(!$menu_item['hidden'])	
 		{
-			?><a href="<?= URL::link($mk) ?>"><?= htmlspecialchars($menu_item['title']) ?></a><?
+			?><a href="<?= URL::link($mk) ?>"><?= safe($menu_item['title']) ?></a><?
 		}
 		?>
 	</nav>
@@ -41,9 +43,6 @@
 	<footer>
 		<div style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
 			<p>WebAppStarter by Udo Schroeter (udo@openfu.com)</p>
-			<p style="font-size: 0.875rem; margin-top: 0.5rem; opacity: 0.7;">
-				Built with modern web technologies and love for developers
-			</p>
 		</div>
 	</footer>
 </body>

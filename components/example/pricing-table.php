@@ -64,14 +64,14 @@
                         <?php endif; ?>
                         
                         <div class="plan-header">
-                            <h3 class="plan-name"><?= htmlspecialchars($plan['name']) ?></h3>
+                            <h3 class="plan-name"><?= safe($plan['name']) ?></h3>
                             <div class="plan-price">
-                                <span class="price"><?= htmlspecialchars($plan['price']) ?></span>
+                                <span class="price"><?= safe($plan['price']) ?></span>
                                 <?php if($plan['period']): ?>
-                                <span class="period"><?= htmlspecialchars($plan['period']) ?></span>
+                                <span class="period"><?= safe($plan['period']) ?></span>
                                 <?php endif; ?>
                             </div>
-                            <p class="plan-description"><?= htmlspecialchars($plan['description']) ?></p>
+                            <p class="plan-description"><?= safe($plan['description']) ?></p>
                         </div>
                         
                         <div class="plan-features">
@@ -79,7 +79,7 @@
                                 <?php foreach($plan['features'] as $feature): ?>
                                 <li>
                                     <span class="check-icon">✓</span>
-                                    <?= htmlspecialchars($feature) ?>
+                                    <?= safe($feature) ?>
                                 </li>
                                 <?php endforeach; ?>
                             </ul>
@@ -87,7 +87,7 @@
                         
                         <div class="plan-footer">
                             <button class="btn <?= $plan['popular'] ? 'btn-primary' : 'btn-outline' ?> btn-large plan-cta">
-                                <?= htmlspecialchars($plan['cta']) ?>
+                                <?= safe($plan['cta']) ?>
                             </button>
                         </div>
                     </div>

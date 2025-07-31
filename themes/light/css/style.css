@@ -3,8 +3,8 @@
 	--bg-color: #f8fafc;
 	--bg-secondary: #ffffff;
 	--bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-	--surface: #ffffff;
-	--surface-elevated: #ffffff;
+	--surface: #eeeeee;
+	--surface-elevated: #eeeeee;
 	--surface-hover: #f1f5f9;
 	--primary: #3b82f6;
 	--primary-dark: #1d4ed8;
@@ -39,7 +39,7 @@
 	--error-border: #dc2626;
 }
 
-/* Dark theme variables */
+/* Dark theme variables 
 .dark-theme {
 	--bg-color: #0f172a;
 	--bg-secondary: #1e293b;
@@ -62,7 +62,6 @@
 	--shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
 	--shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
 	
-	/* Dark theme specific variables */
 	--glass-bg: rgba(30, 41, 59, 0.8);
 	--glass-border: rgba(148, 163, 184, 0.1);
 	--overlay: rgba(0, 0, 0, 0.6);
@@ -75,7 +74,7 @@
 	--error: #ef4444;
 	--error-bg: rgba(239, 68, 68, 0.1);
 	--error-border: rgba(239, 68, 68, 0.3);
-}
+}*/
 
 * {
 	margin: 0;
@@ -235,8 +234,7 @@ h3 {
 }
 
 #content > div:hover, .block:hover, .card:hover {
-	transform: translateY(-2px);
-	box-shadow: var(--shadow-lg);
+	box-shadow: var(--shadow-lg); 
 	border-color: var(--border-hover);
 }
 

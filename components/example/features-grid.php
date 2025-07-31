@@ -45,8 +45,8 @@
                     <div class="feature-icon">
                         <?= $feature['icon'] ?>
                     </div>
-                    <h3 class="feature-title"><?= htmlspecialchars($feature['title']) ?></h3>
-                    <p class="feature-description"><?= htmlspecialchars($feature['description']) ?></p>
+                    <h3 class="feature-title"><?= safe($feature['title']) ?></h3>
+                    <p class="feature-description"><?= safe($feature['description']) ?></p>
                     <div class="feature-overlay"></div>
                 </div>
                 <?php endforeach; ?>

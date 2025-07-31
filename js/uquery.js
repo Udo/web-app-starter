@@ -159,11 +159,11 @@ Array.prototype.load = NodeList.prototype.load = function(url, opt = {}) {
     return new Promise((resolve, reject) => {
         var xhr = new XMLHttpRequest();
         if(opt.postData) {
-            xhr.open('POST', url, true);
+            xhr.open(opt.method || 'POST', url, true);
             xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
             xhr.send(JSON.stringify(opt.postData));
         } else {
-            xhr.open('GET', url, true);
+            xhr.open(opt.method || 'GET', url, true);
         }
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4) {
@@ -221,7 +221,7 @@ Array.prototype.replaceWith = NodeList.prototype.replaceWith = function(content,
     }
 }
 
-Array.prototype.find = NodeList.prototype.find = function(selector) {
+Array.prototype.query = NodeList.prototype.query = function(selector) {
     return Array.from(this).reduce((acc, el) => {
         const found = el.querySelectorAll(selector);
         return acc.concat(Array.from(found));

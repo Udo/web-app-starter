@@ -17,8 +17,8 @@
                 <div class="stats-grid">
                     <?php foreach($stats as $index => $stat): ?>
                     <div class="stat-item" style="animation-delay: <?= $index * 0.2 ?>s">
-                        <div class="stat-number" data-target="<?= htmlspecialchars($stat['number']) ?>"><?= htmlspecialchars($stat['number']) ?></div>
-                        <div class="stat-label"><?= htmlspecialchars($stat['label']) ?></div>
+                        <div class="stat-number" data-target="<?= safe($stat['number']) ?>"><?= safe($stat['number']) ?></div>
+                        <div class="stat-label"><?= safe($stat['label']) ?></div>
                         <div class="stat-bar">
                             <div class="stat-fill" style="animation-delay: <?= ($index * 0.2) + 0.5 ?>s"></div>
                         </div>

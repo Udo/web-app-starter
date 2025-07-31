@@ -29,13 +29,15 @@
 		'site' => array(
 			'name' => 'Web App Starter',
 			'default_page_title' => 'Home',
+			'include_paths' => ['views/', 'components/', ''],
 		),
 		'users' => array(
 			'enable_signup' => true,	
 		),
 		'menu' => array(
 			'' => array('title' => 'Home', 'hidden' => true),	
-			'page1' => array('title' => 'Page 1',),
+			'page1' => array('title' => 'Components',),
+			'features' => array('title' => 'Features',),
 			'page2' => array('title' => 'Page 2',),
 		),
 	

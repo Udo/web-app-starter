@@ -13,11 +13,11 @@
         ?>
         <div class="brands-section">
             <div class="brands-container">
-                <h3 class="brands-title"><?= htmlspecialchars($title) ?></h3>
+                <h3 class="brands-title"><?= safe($title) ?></h3>
                 <div class="brands-grid">
                     <?php foreach($logos as $index => $logo): ?>
                     <div class="brand-item" style="animation-delay: <?= $index * 0.1 ?>s">
-                        <img src="<?= htmlspecialchars($logo['url']) ?>" alt="<?= htmlspecialchars($logo['name']) ?>" />
+                        <img src="<?= safe($logo['url']) ?>" alt="<?= safe($logo['name']) ?>" />
                     </div>
                     <?php endforeach; ?>
                 </div>
