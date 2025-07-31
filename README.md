@@ -26,7 +26,7 @@ location ~ \.php$ {
 }
 ```
 
-**Note**: Without pretty URL configuration, set `cfg('url/pretty') = false` in your config and URLs will use query string format: `/?page&param=value`
+**Note**: Without pretty URL configuration, set `cfg('url/pretty') = false` in your config/settings.php and URLs will use query string format: `/?page&param=value`. You can generate URLs with `URL::Link()` which will automatically use the appropriate format if you want to keep your options open (as to whether to use pretty URLs or not).
 
 ## Routing
 
@@ -52,9 +52,7 @@ view uses this to invoke the correct sub-view.
 
 Components for reusable UI elements. Components are PHP files that return an array with render functions and metadata.
 
-### Component Structure
-
-Components are located in the `components/` directory and follow this structure:
+Example and standard components are located in the `components/` directory, but you can put them anywhere.
 
 ```php
 <?php return [
