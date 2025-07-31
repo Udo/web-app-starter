@@ -61,17 +61,17 @@ Components are located in the `components/` directory and follow this structure:
 ### Using Components
 
 ```php
-<?= component('components/basic/button', [
+	<?= component('components/basic/button', [
 		'text' => 'Click me',
 		'type' => 'primary'
-]) ?>
+	]) ?>
 ```
 
 **Using Specific Render Methods:**
 ```php
-<?= component('components/layout/section:begin', ['class' => 'hero']) ?>
+	<?= component('components/layout/section:begin', ['class' => 'hero']) ?>
 		<h1>Content here</h1>
-<?= component('components/layout/section:end') ?>
+	<?= component('components/layout/section:end') ?>
 ```
 
 ### Inline Components
@@ -91,9 +91,9 @@ You can also declare components directly in code:
 This package includes a very basic Log class.
 
 ```php
-Log::debug($module, $text) /* writes to log/debug.[Y]-[m].log */
-Log::text($module, $text)   /* writes to log/log.[Y]-[m].log */
-Log::audit($module, $text) /* writes to system journal */
+	Log::debug($module, $text) /* writes to log/debug.[Y]-[m].log */
+	Log::text($module, $text)   /* writes to log/log.[Y]-[m].log */
+	Log::audit($module, $text) /* writes to system journal */
 ```
 
 `$module` should be a short string identifying the module or context of the log line.
