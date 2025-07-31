@@ -26,8 +26,8 @@ would look like this:
 ```
 Array
 (
-		[page] => index
-		[l-path] => some/url/path
+	[page] => index
+	[l-path] => some/url/path
 )
 ``` 
 
