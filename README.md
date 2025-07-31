@@ -15,7 +15,7 @@ location / {
 }
 
 # the rest of the owl
-location ~ ^/(config|lib|private)/ {
+location ~ ^/(config|lib|private|\.git)/ {
 	deny all;
 	return 404;
 }
