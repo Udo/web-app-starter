@@ -5,18 +5,6 @@ Simple web app starter package, expects to run in a domain's root directory but 
 
 ## Nginx Configuration
 
-### Basic Security (Required)
-```nginx
-location /private/ { /* replace this with your private directory */
-	deny all;
-	return 404;
-}
-location /.git {
-	deny all;
-	return 404;
-}
-```
-
 ### Pretty URLs Support (Optional)
 For pretty URLs (`cfg('url/pretty') = true`), add this configuration to enable clean URLs like `/users/profile` instead of `/?users/profile`:
 
