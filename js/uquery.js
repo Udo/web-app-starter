@@ -201,6 +201,15 @@ Array.prototype.html = NodeList.prototype.html = function(opt_content = false, u
     }
 }
 
+Array.prototype.text = NodeList.prototype.text = function(opt_content = false) {
+    if (opt_content === false) {
+        return Array.from(this).map(el => el.textContent).join('');
+    }
+    this.forEach(el => {
+        el.textContent = opt_content;
+    });
+}
+
 Array.prototype.replaceWith = NodeList.prototype.replaceWith = function(content, use_diff = undefined) {
     if($.options.alwaysDoDifferentialUpdate || (use_diff !== undefined && use_diff)) {
         this.forEach(el => {
@@ -280,7 +289,7 @@ Array.prototype.removeClass = NodeList.prototype.removeClass = function(classNam
 Array.prototype.css = NodeList.prototype.css = function(styles, optOrValue = false) {
     this.forEach(function(el) {
         if(optOrValue !== false) {
-            el.style[optOrValue] = styles;
+            el.style[styles] = optOrValue;
             return;
         } else for (var key in styles) {
             el.style[key] = styles[key];
@@ -320,4 +329,19 @@ Array.prototype.remove = NodeList.prototype.remove = function() {
         el.parentNode.removeChild(el);
     });
     return this;
+}
+
+function first(...args) {
+    for (const arg of args) {
+        if (arg !== undefined && arg !== null && arg !== '') {
+            return arg;
+        }
+    }
+    return null;
+}
+
+function clamp(v, min, max) {
+    if (v < min) return min;
+    if (v > max) return max;
+    return v;
 }

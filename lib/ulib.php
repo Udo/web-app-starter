@@ -26,12 +26,16 @@ function get_file_location($file, $error_if_not_found = true)
 function include_js($src_file)
 {
 	if(!($file_location = get_file_location($src_file))) return;
+	if($GLOBALS['include_once'][$file_location]) return;
+	$GLOBALS['include_once'][$file_location] = true;
 	?><script src="<?= cfg('url/root').$file_location ?>?v=<?= filemtime($file_location) ?>"></script><?
 }
 
 function include_css($src_file)
 {
 	if(!($file_location = get_file_location($src_file))) return;
+	if($GLOBALS['include_once'][$file_location]) return;
+	$GLOBALS['include_once'][$file_location] = true;
 	?><link rel="stylesheet" href="<?= cfg('url/root').$file_location ?>?v=<?= filemtime($file_location) ?>" /><?
 }
 	
@@ -40,18 +44,27 @@ function include_css($src_file)
 // escapes a string for use in HTML attributes
 function asafe($s)
 {
+	if($s === null) return '';
 	return htmlspecialchars(str_replace(array("\r", "\n"), ' ', $s), ENT_QUOTES, 'UTF-8');
 }
 
 // escapes a string for use in HTML text
 function safe($s)
 {
+	if($s === null) return '';
 	return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
 }
 
 function jsafe($s)
 {
 	return json_encode($s);
+}
+
+function clamp($v, $min, $max)
+{
+	if($v < $min) return $min;
+	if($v > $max) return $max;
+	return $v;
 }
 
 /**

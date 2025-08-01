@@ -347,6 +347,37 @@ button:active, .btn:active {
 	font-size: 1.125rem;
 }
 
+input[type="range"] {
+    width: 100%;
+    height: 6px;
+    background: var(--bg-color);
+    outline: none;
+    border-radius: 3px;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--primary);
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: var(--shadow-sm);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: var(--primary);
+    cursor: pointer;
+    border-radius: 50%;
+    border: none;
+    box-shadow: var(--shadow-sm);
+}
+
 /* Utility Classes */
 .banner {
 	padding: 1rem 1.5rem;

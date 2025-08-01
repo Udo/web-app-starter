@@ -51,7 +51,8 @@
 			'' => array('title' => 'Home', 'hidden' => true),	
 			'page1' => array('title' => 'Components',),
 			'features' => array('title' => 'Features',),
-			'page2' => array('title' => 'Page 2',),
+			'page2' => array('title' => 'Ajaxy',),
+			'gauges' => array('title' => 'Gauges',),
 		),
 	
 	);

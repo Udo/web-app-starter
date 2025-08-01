@@ -1,4 +1,4 @@
-<h1>Page 2</h1>
+<h1>Ajax Demo</h1>
 
 <div id="page2-section1">
     <p>This is the content of Page 2. You can add more information here.</p>
