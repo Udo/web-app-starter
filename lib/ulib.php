@@ -67,6 +67,15 @@ function clamp($v, $min, $max)
 	return $v;
 }
 
+function pick_entry_from_range($array, $value)
+{
+	if(!is_array($array)) return [];
+	$result = [];
+	foreach($array as $pv)
+		if($value >= $pv['from'] && $value <= $pv['to']) $result = $pv;
+	return $result;
+}
+
 /**
 	* Can have any number of arguments. Returns the first of its arguments that is not false, empty string, or null.
 	*/ 

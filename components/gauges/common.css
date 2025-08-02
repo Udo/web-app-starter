@@ -1,0 +1,95 @@
+    .horizontal .progressbar-item {
+        display: flex;
+        min-width: 100%;
+        padding: 5px;
+    }
+
+    .progressbar-container.vertical {
+        display: flex;
+    }
+
+    .vertical .progressbar-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 5px;
+        text-align: center;
+    }
+
+    .progressbar-label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: bold;
+    }
+
+    .horizontal .progressbar-label, .horizontal .progressbar-value {
+        flex: 0 0 auto;
+        margin-right: 10px;
+    }
+
+    .horizontal .progressbar-label {
+        min-width: 50px;
+    }
+
+    .vertical .progressbar-label {
+        text-align: center;
+    }
+
+    .horizontal .progressbar-value {
+        min-width: 50px;
+        text-align: right;
+    }
+
+    .progressbar-background {
+        flex: 1;
+        background: var(--bg-color);
+        padding: 4px;
+        display: flex;
+    }
+
+    .vertical .progressbar-background {
+        flex-direction: column;
+        justify-content: flex-end;
+    }
+
+    .progressbar-bar {
+        transition: all 0.3s ease;
+    }
+
+    .progressbar-marker {
+        position: absolute;
+        z-index: 10;
+        opacity: 0.5;
+        background: var(--text-color, #333);
+    }
+
+    .progressbar-marker:hover {
+        opacity: 1;
+    }
+
+    .horizontal .progressbar-marker {
+        border-width: 0 2px 0 2px;
+        height: 100%;
+        top: 0;
+        min-width: 4px;
+    }
+
+    .vertical .progressbar-marker {
+        border-width: 2px 0 2px 0;
+        width: 100%;
+        left: 0;
+        min-height: 4px;
+    }
+
+    .progressbar-background {
+        position: relative;
+    }
+
+    .needlegauge-svg .needle {
+        transition: all 0.3s ease;
+    }
+
+    .needlegauge-item {
+        display: inline-block;
+    }

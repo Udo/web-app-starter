@@ -1,76 +1,20 @@
-<style>
-    
-    .horizontal .progressbar-item {
-        display: flex;
-        min-width: 100%;
-        padding: 5px;
-    }
-
-    .progressbar-container.vertical {
-        display: flex;
-    }
-
-    .vertical .progressbar-item {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 5px;
-        text-align: center;
-    }
-
-    .progressbar-label {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        font-weight: bold;
-    }
-
-    .horizontal .progressbar-label, .horizontal .progressbar-value {
-        flex: 0 0 auto;
-        margin-right: 10px;
-    }
-
-    .horizontal .progressbar-label {
-        min-width: 50px;
-    }
-
-    .vertical .progressbar-label {
-        text-align: center;
-    }
-
-    .horizontal .progressbar-value {
-        min-width: 50px;
-        text-align: right;
-    }
-
-    .progressbar-background {
-        flex: 1;
-        background: var(--bg-color);
-        padding: 2px;
-        display: flex;
-    }
-
-    .vertical .progressbar-background {
-        flex-direction: column;
-        justify-content: flex-end;
-    }
-
-    .progressbar-bar {
-        transition: all 0.3s ease;
-    }
-    
-</style>
 <script>
 
 ProgressbarComponents = { 
 
     start_listen : function(prop) {
         $.events.on('value-broadcast', function(data) {
-            if(prop.bars[data.name]) {
+            if(prop.items[data.name]) {
                 // update value text
-                $('#' + prop.id + '-' + data.name + '-value').text(data.value + (prop.bars[data.name].unit || ''));
+                let bar = Object.assign({}, prop.scale, prop.items[data.name]);
+                $('#' + prop.id + '-' + data.name + '-value').text(data.value + (bar.unit || ''));
                 // update bar width/height
-                let pct_value = clamp(data.value / (prop.bars[data.name].max || 100) * 100, 0, 100);
+                let vrange = (bar.max || 100) - (bar.min || 0);
+                let pct_value = clamp((data.value - (bar.min || 0)) / vrange * 100, 0, 100);
+                if(Array.isArray(bar.color)) {
+                    let bcolor = pick_entry_from_range(bar.color, data.value).color;
+                    $('#' + prop.id + '-' + data.name + '-bar').css('background', bcolor);
+                }
                 if(prop.layout === 'horizontal') {
                     $('#' + prop.id + '-' + data.name + '-bar').css('width', pct_value + '%');
                 } else {
@@ -85,11 +29,13 @@ ProgressbarComponents = {
 </script><?php 
 
 include_js('components/gauges/common.js');
+include_css('components/gauges/common.css');
 
 return [
 
     'render' => function($prop) {
         $auto_color_counter = 1;
+        if(!$prop['scale']) $prop['scale'] = [];
         ?>        
         <div class="block progressbar" id="<?= $prop['id'] ?>" style="<?= $prop['style'] ?>">
             <?php if(isset($prop['title'])) { ?>
@@ -97,9 +43,13 @@ return [
             <?php } ?>
             <?php if(first($prop['layout'], 'horizontal') == 'horizontal') { ?>
             <div class="progressbar-container horizontal">
-                <?php foreach($prop['bars'] as $bar_id => $bar) 
+                <?php foreach($prop['items'] as $bar_id => $bar) 
                 { 
-                    $bar['pct-value'] = clamp($bar['value'] / first($bar['max'], 100) * 100, 0, 100);
+                    $bar = array_merge($prop['scale'], $bar);
+                    $vrange = (first($bar['max'], 100) - first($bar['min'], 0));
+                    $bar['pct-value'] = clamp(($bar['value'] - first($bar['min'], 0)) / $vrange * 100, 0, 100);
+                    if(is_array($bar['color']))
+                        $bar['color'] = pick_entry_from_range($bar['color'], $bar['value'])['color'];
                     if(!$bar['color'])
                         $bar['color'] = first($prop['bar-color'], 'var(--color-'.($auto_color_counter++).', #4488bb)');
                     ?>
@@ -124,6 +74,20 @@ return [
                                     width: <?= safe($bar['pct-value']) ?>%;
                                     min-height: <?= isset($bar['size']) ? safe($bar['size']) : '20px' ?>;">
                             </div>
+                            <?php 
+                            if(isset($prop['markers'])) {
+                                foreach($prop['markers'] as $marker_id => $marker) {
+                                    $marker_pct = clamp(($marker['value'] - first($bar['min'], 0)) / $vrange * 100, 0, 100);
+                                    ?>
+                                    <div class="progressbar-marker" 
+                                        title="<?= asafe($marker['label']) ?>"
+                                        style="left: <?= ($marker_pct) ?>%; 
+                                               background: <?= first($marker['color'], 'var(--primary-light)') ?>;">                                        
+                                    </div>
+                                    <?php
+                                }
+                            }
+                            ?>
                         </div>
                         <?= $bar['after'] ?>
                     </div>
@@ -132,13 +96,17 @@ return [
             <?php } else { ?>
             <div class="progressbar-container vertical" style="height: <?= safe($prop['height']) ?>px;">
                 <?php 
-                if($prop['bars'] && sizeof($prop['bars']) > 0)
+                if($prop['items'] && sizeof($prop['items']) > 0)
                 {
-                    $item_width = first($prop['item-width'], (100/sizeof($prop['bars'])).'%');
+                    $item_width = first($prop['item-width'], (100/sizeof($prop['items'])).'%');
                     if($prop['pad-right'] !== false && !$prop['item-width']) $item_width = '100px';
-                    foreach($prop['bars'] as $bar_id => $bar) 
-                    { 
-                        $bar['pct-value'] = clamp($bar['value'] / first($bar['max'], 100) * 100, 0, 100);
+                    foreach($prop['items'] as $bar_id => $bar) 
+                    {
+                        $bar = array_merge($prop['scale'], $bar);
+                        $vrange = (first($bar['max'], 100) - first($bar['min'], 0));
+                        $bar['pct-value'] = clamp(($bar['value'] - first($bar['min'], 0)) / $vrange * 100, 0, 100);
+                        if(is_array($bar['color']))
+                            $bar['color'] = pick_entry_from_range($bar['color'], $bar['value'])['color'];
                         if(!$bar['color'])
                             $bar['color'] = first($prop['bar-color'], 'var(--color-'.($auto_color_counter++).', #4488bb)');
                         ?>
@@ -156,6 +124,21 @@ return [
                                         height: <?= safe($bar['pct-value']) ?>%;
                                         min-width: <?= isset($bar['size']) ? safe($bar['size']) : '20px' ?>;">
                                 </div>
+                                <?php 
+                                // Render markers for vertical layout
+                                if(isset($prop['markers'])) {
+                                    foreach($prop['markers'] as $marker_id => $marker) {
+                                        $marker_pct = clamp(($marker['value'] - first($bar['min'], 0)) / $vrange * 100, 0, 100);
+                                        ?>
+                                        <div class="progressbar-marker" 
+                                            title="<?= asafe($marker['label']) ?>"
+                                            style="bottom: <?= ($marker_pct) ?>%; 
+                                                   background: <?= first($marker['color'], 'var(--primary-light)') ?>;">
+                                        </div>
+                                        <?php
+                                    }
+                                }
+                                ?>
                             </div>
 
                             <div class="progressbar-value" style="<?= $prop['value-style'] ?>"

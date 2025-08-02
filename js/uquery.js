@@ -266,6 +266,16 @@ Array.prototype.toggle = NodeList.prototype.toggle = function() {
     return this;
 }
 
+Array.prototype.attr = NodeList.prototype.attr = function(name, value) {
+    if (value === undefined) {
+        return this.length > 0 ? this[0].getAttribute(name) : null;
+    }
+    this.forEach(function(el) {
+        el.setAttribute(name, value);
+    });
+    return this;
+}
+
 Array.prototype.addClass = NodeList.prototype.addClass = function(classNameOrList) {
     var classList = Array.isArray(classNameOrList) ? classNameOrList : [classNameOrList];
     this.forEach(function(el) {
@@ -344,4 +354,13 @@ function clamp(v, min, max) {
     if (v < min) return min;
     if (v > max) return max;
     return v;
+}
+
+function pick_entry_from_range(array, value) {
+    if (!array) return {};
+    let result = {};
+    for (const [pv] of Object.entries(array)) {
+        if (value >= pv.from && value <= pv.to) result = pv;
+    }
+    return result;
 }
