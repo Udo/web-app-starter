@@ -17,15 +17,40 @@ var num_out = (n, decimals = 2) => {
 }
 
 var num_out_round = (n) => {
-	if(typeof n == 'undefined' || n === false) n = 0;
-	if(n > 999999) {
-		n = (n/1000000).toFixed(1) + 'M';
-	} else if(n > 999) {
-		n = (n/1000).toFixed(1) + 'k';
-	} else {
-		n = Math.round(n);
+	if(typeof n == 'undefined' || n === false || n === null) n = 0;
+	
+	if(typeof n === 'string') {
+		n = parseFloat(n);
+		if(isNaN(n)) return '0';
 	}
-	return(n);
+	
+	if(Math.abs(n) >= 1e15) {
+		return n.toExponential(2);
+	}
+	
+	if(Math.abs(n) > 0 && Math.abs(n) < 0.001) {
+		return n.toExponential(2);
+	}
+	
+	if(Math.abs(n) >= 1e12) {
+		return (n/1e12).toFixed(1) + 'T';
+	} else if(Math.abs(n) >= 1e9) {
+		return (n/1e9).toFixed(1) + 'B';
+	} else if(Math.abs(n) >= 1e6) {
+		return (n/1e6).toFixed(1) + 'M';
+	} else if(Math.abs(n) >= 1e3) {
+		return (n/1e3).toFixed(1) + 'k';
+	} else if(Math.abs(n) >= 1) {
+		return Math.round(n);
+	} else if(Math.abs(n) >= 0.01) {
+		return n.toFixed(2);
+	} else if(Math.abs(n) >= 0.001) {
+		return n.toFixed(3);
+	} else if(n === 0) {
+		return 0;
+	}
+	
+	return n.toString();
 }
 
 var debug_out = (ee) => {
@@ -90,7 +115,6 @@ var data_prefix = (identifier) => {
 }
 
 var parse_field_with_default = (fieldText) => {
-	// Parse "field or 'default'" or "field or \"default\"" syntax
 	var orMatch = fieldText.match(/^(.+?)\s+or\s+(['"])(.*?)\2$/);
 	if (orMatch) {
 		return {
@@ -109,9 +133,9 @@ var compile = function(text, options = {}) {
 	var crash_counter = 0;
 	var tokens = [];
 	var gensource = [];
-	var event_bindings = []; // Track event bindings for DOM attachment
-	var components = options.components || {}; // Reusable template components
-	var condition_stack = []; // Track nested conditions
+	var event_bindings = []; 
+	var components = options.components || {}; 
+	var condition_stack = []; 
 
 	var emit = {
 		text : (token) => {
@@ -145,19 +169,12 @@ var compile = function(text, options = {}) {
 			gensource.push('output += num_out_round('+data_prefix(token.text)+');');
 		},
 		each_start : (token) => {
-			// Parse "items" or "items as itemName"
 			var parts = token.text.split(' as ');
 			var collection = parts[0].trim();
-			var itemName = parts.length > 1 ? parts[1].trim() : null;
+			var itemName = parts.length > 1 ? parts[1].trim() : 'data';
 			
-			if (itemName) {
-				// Named iteration: create a new scope with the named variable
-				gensource.push('each('+data_prefix(collection)+', ('+itemName+', index) => {');
-				gensource.push('var data = Object.assign({}, data_root, {'+itemName+': '+itemName+'});');
-			} else {
-				// Original behavior: data becomes the current item
-				gensource.push('each('+data_prefix(collection)+', (data, index) => {');
-			}
+			gensource.push('each('+data_prefix(collection)+', ('+itemName+', index) => {');
+
 		},
 		if_start : (token) => {
 			condition_stack.push('if');
@@ -276,7 +293,6 @@ var compile = function(text, options = {}) {
 			var tokenText = text.substr(0, p1);
 			var token = { type : sp_found.type, text : tokenText };
 			
-			// Parse default values for field types
 			if (sp_found.type === 'field' || sp_found.type === 'var_out' || 
 			    sp_found.type === 'field_unsafe' || sp_found.type === 'field_number' || 
 			    sp_found.type === 'field_number_round') {
