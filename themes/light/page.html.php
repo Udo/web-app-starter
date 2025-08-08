@@ -20,7 +20,7 @@
 	<?php
 		include_css($theme_path.'css/style.css');
 		include_css($theme_path_common.'fontawesome/css/all.min.css');
-		include_js('js/uquery.js');
+		include_js('js/u-query.js');
 		include_js('js/morphdom.js');
 		include_js('js/site.js');
 	?>

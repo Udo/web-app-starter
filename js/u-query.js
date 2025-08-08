@@ -96,7 +96,7 @@ $ = function(selector_or_element) {
 };
 
 $.options = {
-    alwaysDoDifferentialUpdate: true, // use morphdom to do diff updates
+    alwaysDoDifferentialUpdate: false,
 };
 
 $.events = new EventEmitter();
