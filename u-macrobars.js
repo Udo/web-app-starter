@@ -18,9 +18,13 @@ var num_out = (n, decimals = 2) => {
 
 var num_out_round = (n) => {
 	if(typeof n == 'undefined' || n === false) n = 0;
-	if(n > 999999) n = (n/1000000).toFixed(1) + 'M';
-	if(n > 999) n = (n/1000).toFixed(1) + 'k';
-	else n = Math.round(n);
+	if(n > 999999) {
+		n = (n/1000000).toFixed(1) + 'M';
+	} else if(n > 999) {
+		n = (n/1000).toFixed(1) + 'k';
+	} else {
+		n = Math.round(n);
+	}
 	return(n);
 }
 
@@ -117,7 +121,7 @@ var compile = function(text, options = {}) {
 			gensource.push(token.text);
 		},
 		defer : (token) => {
-			gensource.push('output += "<script>\n" + '+JSON.stringify(token.text)+' + "</script>\n";');
+			gensource.push('output += "<script>" + '+JSON.stringify(token.text)+' + "</script>";');
 		},
 		var_out : (token) => {
 			var defaultVal = token.default ? JSON.stringify(token.default) : 'default_empty_field';
@@ -176,9 +180,9 @@ var compile = function(text, options = {}) {
 		component : (token) => {
 			var comp_name = token.text.trim();
 			if (components[comp_name]) {
-				gensource.push('output += ('+JSON.stringify(components[comp_name])+');');
+				gensource.push('output += components['+JSON.stringify(comp_name)+'](data);');
 			} else {
-				gensource.push('output += "<!-- Component '+comp_name+' not found -->";');
+				gensource.push('output += "[Component '+comp_name+' not found]";');
 			}
 		},
 		event_bind : (token) => {
@@ -303,9 +307,6 @@ var compile = function(text, options = {}) {
 	gensource.push('	if(!data) data = {}; var data_root = data;');
 	gensource.push('	var output = ""; var default_empty_field = "";');
 	gensource.push('	var echo = (s) => { output += s; };');
-	each(options, (v, k) => {
-		gensource.push('	var '+k+' = '+options[k]+';');
-	});
 	tokens.forEach((tok) => {
 		emit[tok.type](tok);
 	});
@@ -325,6 +326,8 @@ var compile = function(text, options = {}) {
 	f.tokens = tokens;
 	f.gensource = gensource;
 	f.event_bindings = event_bindings;
+	f.options = options;
+	f.components = components;
 
 	f.renderTo = function(container_or_query, data) {
 		var container;
