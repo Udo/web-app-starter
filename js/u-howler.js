@@ -211,6 +211,8 @@ class HowlerGlobal {
 
 class Howl {
 	constructor(options = {}) {
+        if(options.url) options.src = options.url; // backwards compat
+        if(options.urls) options.src = options.urls; // backwards compat
 		if (!options.src?.length) throw new Error('src required');
 		
 		Object.assign(this, {
