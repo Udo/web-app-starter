@@ -44,6 +44,9 @@
 			'autostart_session' => true,
 			'timezone' => 'UTC',
 		),
+		'filebase' => [
+			'path' => '/tmp/',
+		],
 		'users' => array(
 			'enable_signup' => true,	
 		),
@@ -53,6 +56,7 @@
 			'features' => array('title' => 'Features',),
 			'page2' => array('title' => 'Ajaxy',),
 			'gauges' => array('title' => 'Gauges',),
+			'auth/demo' => array('title' => 'Auth',),
 		),
 	
 	);

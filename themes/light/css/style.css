@@ -21,8 +21,10 @@
 	--shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 	--shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 	--radius: 8px;
+	--radius-md: 8px;
 	--radius-lg: 12px;
 	--radius-xl: 16px;
+	--radius-sm: 4px;
 	
 	/* Light theme specific variables */
 	--glass-bg: rgba(255, 255, 255, 0.95);
@@ -31,12 +33,19 @@
 	--success: #10b981;
 	--success-bg: #dcfce7;
 	--success-border: #16a34a;
+	--success-text: #065f46;
 	--warning: #f59e0b;
 	--warning-bg: #fef3c7;
 	--warning-border: #d97706;
+	--warning-text: #92400e;
 	--error: #ef4444;
 	--error-bg: #fee2e2;
 	--error-border: #dc2626;
+	--error-text: #991b1b;
+	--info: #3b82f6;
+	--info-bg: #dbeafe;
+	--info-border: #2563eb;
+	--info-text: #1e40af;
 }
 
 /* Dark theme variables 
@@ -121,6 +130,8 @@ nav {
 	-webkit-backdrop-filter: blur(20px);
 	border-bottom: 1px solid var(--border);
 	padding: 0 1rem;
+	display: flex;
+	align-items: center;
 	box-shadow: var(--shadow-sm);
 	transition: all 0.3s ease;
 }
@@ -163,6 +174,41 @@ nav > a::after {
 
 nav > a:hover::after {
 	width: 80%;
+}
+
+/* Account area inside the nav */
+.nav-menu {
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+}
+
+.nav-account {
+	margin-left: auto;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.nav-account .account-name {
+	color: var(--text-secondary);
+	font-weight: 500;
+	margin-right: 0.5rem;
+	font-size: 0.95rem;
+}
+
+.nav-account a {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.5rem 0.75rem;
+	border-radius: var(--radius);
+	color: var(--text-primary);
+	text-decoration: none;
+}
+
+.nav-account a:hover {
+	background: var(--surface-hover);
+	color: var(--primary-dark);
 }
 
 /* Navigation scroll state */

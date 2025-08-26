@@ -30,10 +30,33 @@
 	<?= component('components/example/theme-switcher') ?>
 	<?= component('components/basic/cookie-consent') ?>
 	<nav>
-		<a href="<?= URL::link('') ?>"><?= cfg('site/name') ?></a><?php
-		foreach(cfg('menu') as $mk => $menu_item) if(!$menu_item['hidden'])	
-		{
-			?><a href="<?= URL::link($mk) ?>"><?= safe($menu_item['title']) ?></a><?
+		<?php require_once __DIR__ . '/../../lib/user.class.php'; ?>
+		<div class="nav-menu">
+			<a href="<?= URL::link('') ?>"><?= cfg('site/name') ?></a>
+			<?php
+			foreach(cfg('menu') as $mk => $menu_item) if(!$menu_item['hidden'])	
+			{
+				?><a href="<?= URL::link($mk) ?>"><?= safe($menu_item['title']) ?></a><?php
+			}
+			?>
+		</div>
+		<?php
+		if (User::IsSignedIn()) {
+			$__u = User::$current_profile;
+			?>
+			<div class="nav-account">
+				<span class="account-name"><?php echo htmlspecialchars($__u['email'] ?? 'Account'); ?></span>
+				<a href="<?= URL::link('account/profile') ?>">Profile</a>
+				<a href="<?= URL::link('account/logout') ?>">Logout</a>
+			</div>
+			<?php
+		} else {
+			?>
+			<div class="nav-account">
+				<a href="<?= URL::link('account/login') ?>">Login</a>
+				<a href="<?= URL::link('account/register') ?>">Register</a>
+			</div>
+			<?php
 		}
 		?>
 	</nav>
