@@ -1,4 +1,5 @@
 (function (root, factory) {
+    // this is the stupid UMD pattern, but eh we lost that battle a long time ago
 	if (typeof exports === 'object' && typeof module !== 'undefined') {
 		var exports_obj = factory();
 		module.exports = exports_obj.$;
@@ -106,10 +107,19 @@ class QueryWrapper extends Array {
 
 $ = function(selector_or_element) {
     let elements;
-    if (selector_or_element instanceof Element) {
+    if (selector_or_element instanceof Element || selector_or_element === document || selector_or_element === window) {
         elements = [selector_or_element];
     } else if (typeof selector_or_element === 'string') {
-        elements = Array.from(document.querySelectorAll(selector_or_element));
+        // Check if string looks like HTML (starts with < and ends with >)
+        if (selector_or_element.trim().charAt(0) === '<' && selector_or_element.trim().charAt(selector_or_element.trim().length - 1) === '>') {
+            // Create element from HTML string
+            let temp = document.createElement('div');
+            temp.innerHTML = selector_or_element.trim();
+            elements = Array.from(temp.children);
+        } else {
+            // Treat as CSS selector
+            elements = Array.from(document.querySelectorAll(selector_or_element));
+        }
     } else if (selector_or_element instanceof NodeList || Array.isArray(selector_or_element)) {
         elements = Array.from(selector_or_element);
     } else {
@@ -142,46 +152,72 @@ $.each = function(selector, callback) {
 }
 
 $.post = function(url, data, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            callback(JSON.parse(xhr.responseText));
+    return $.ajax({
+        method: 'POST',
+        url: url,
+        data: data,
+        success: callback,
+        error: function(xhr) {
+            console.error('POST request failed:', xhr);
         }
-    };
-    xhr.send(JSON.stringify(data));
+    });
 }
 
 $.get = function(url, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            callback(JSON.parse(xhr.responseText));
+    return $.ajax({
+        method: 'GET',
+        url: url,
+        success: callback,
+        error: function(xhr) {
+            console.error('GET request failed:', xhr);
         }
-    };
-    xhr.send();
+    });
 }
 
 $.ajax = function(options) {
-    var xhr = new XMLHttpRequest();
-    xhr.open(options.method || 'GET', options.url, true);
-    if (options.headers) {
-        for (var key in options.headers) {
-            xhr.setRequestHeader(key, options.headers[key]);
+    return new Promise((resolve, reject) => {
+        var xhr = new XMLHttpRequest();
+        xhr.open(options.method || 'GET', options.url, true);
+        
+        // Set default headers
+        if (options.method === 'POST' || options.data) {
+            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
         }
-    }
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4) {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                options.success && options.success(JSON.parse(xhr.responseText));
-            } else {
-                options.error && options.error(xhr);
+        
+        // Set custom headers
+        if (options.headers) {
+            for (var key in options.headers) {
+                xhr.setRequestHeader(key, options.headers[key]);
             }
         }
-    };
-    xhr.send(options.data ? JSON.stringify(options.data) : null);
+        
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                var response;
+                try {
+                    response = JSON.parse(xhr.responseText);
+                } catch (e) {
+                    // If JSON parsing fails, use raw response
+                    response = xhr.responseText;
+                }
+                
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    if (options.success) options.success(response);
+                    resolve(response);
+                } else {
+                    if (options.error) options.error(xhr);
+                    reject(xhr);
+                }
+            }
+        };
+        
+        var data = null;
+        if (options.data) {
+            data = typeof options.data === 'string' ? options.data : JSON.stringify(options.data);
+        }
+        
+        xhr.send(data);
+    });
 }
 
 $.ready = function(callback) {
@@ -189,6 +225,67 @@ $.ready = function(callback) {
         callback();
     } else {
         document.addEventListener('DOMContentLoaded', callback);
+    }
+}
+
+// Helper function to execute scripts in HTML content
+function executeScripts(htmlContent) {
+    // Create a temporary container to parse the HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlContent;
+    
+    // Find all script tags and disable them temporarily
+    const scripts = tempDiv.querySelectorAll('script');
+    const scriptData = [];
+    
+    scripts.forEach((script) => {
+        // Store script data for later execution
+        scriptData.push({
+            content: script.textContent || script.innerText || '',
+            src: script.src,
+            type: script.type,
+            nonce: script.nonce,
+            async: script.async,
+            defer: script.defer
+        });
+        
+        // Disable the script by changing its type
+        script.type = 'text/disabled-script';
+    });
+    
+    // Return the modified HTML and script data
+    return {
+        html: tempDiv.innerHTML,
+        scripts: scriptData
+    };
+}
+
+// Helper function to execute a single script
+function executeScript(scriptInfo) {
+    if (scriptInfo.src) {
+        // External script
+        const newScript = document.createElement('script');
+        if (scriptInfo.type && scriptInfo.type !== 'text/disabled-script') {
+            newScript.type = scriptInfo.type;
+        }
+        if (scriptInfo.nonce) newScript.nonce = scriptInfo.nonce;
+        if (scriptInfo.async) newScript.async = scriptInfo.async;
+        if (scriptInfo.defer) newScript.defer = scriptInfo.defer;
+        newScript.src = scriptInfo.src;
+        
+        document.head.appendChild(newScript);
+    } else if (scriptInfo.content.trim()) {
+        // Inline script
+        const newScript = document.createElement('script');
+        if (scriptInfo.type && scriptInfo.type !== 'text/disabled-script') {
+            newScript.type = scriptInfo.type;
+        }
+        if (scriptInfo.nonce) newScript.nonce = scriptInfo.nonce;
+        newScript.text = scriptInfo.content;
+        
+        // Execute by inserting and immediately removing
+        document.head.appendChild(newScript);
+        document.head.removeChild(newScript);
     }
 }
 
@@ -200,38 +297,38 @@ QueryWrapper.prototype.parent = function() {
 
 QueryWrapper.prototype.load = function(url, opt = {}) {
     return new Promise((resolve, reject) => {
-        var xhr = new XMLHttpRequest();
-        if(opt.postData) {
-            xhr.open(opt.method || 'POST', url, true);
-            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-            xhr.send(JSON.stringify(opt.postData));
-        } else {
-            xhr.open(opt.method || 'GET', url, true);
-        }
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    if(opt.replace)
-                        this.replaceWith(xhr.responseText);
-                    else
-                        this.html(xhr.responseText);
-                    if (opt.onLoad) opt.onLoad(xhr.responseText, xhr);
-                    resolve(this);
-                } else {
-                    if (opt.onError) opt.onError(xhr);
-                    reject(new Error('Failed to load: ' + url));
-                }
+        const ajaxOptions = {
+            method: opt.method || (opt.postData ? 'POST' : 'GET'),
+            url: url,
+            success: (response) => {
+                if(opt.replace)
+                    this.replaceWith(response, opt);
+                else
+                    this.html(response, opt);
+                if (opt.onLoad) opt.onLoad(response, null);
+                resolve(this);
+            },
+            error: (xhr) => {
+                if (opt.onError) opt.onError(xhr);
+                reject(new Error('Failed to load: ' + url));
             }
-        }.bind(this);
-        xhr.send();
+        };
+
+        if (opt.postData) {
+            ajaxOptions.data = opt.postData;
+        }
+
+        $.ajax(ajaxOptions);
     });
 }
 
-QueryWrapper.prototype.html = function(opt_content = false, use_diff = undefined) {
+QueryWrapper.prototype.html = function(opt_content = false, prop = {}) {
     if (opt_content === false) {
         return Array.from(this).map(el => el.innerHTML).join('');
     }
-    if($.options.alwaysDoDifferentialUpdate || (use_diff !== undefined && use_diff)) {
+    if(typeof prop.diff == 'undefined') 
+        prop.diff = $.options.alwaysDoDifferentialUpdate;
+    if(prop.diff === true) {
         const temp = document.createElement('div');
         temp.innerHTML = opt_content;
         this.forEach(el => {
@@ -239,7 +336,9 @@ QueryWrapper.prototype.html = function(opt_content = false, use_diff = undefined
         });
     } else {
         this.forEach(el => {
-            el.innerHTML = opt_content;
+            const result = executeScripts(opt_content);
+            el.innerHTML = result.html;
+            result.scripts.forEach(executeScript);
         });
     }
     return this;
@@ -255,8 +354,10 @@ QueryWrapper.prototype.text = function(opt_content = false) {
     return this;
 }
 
-QueryWrapper.prototype.replaceWith = function(content, use_diff = undefined) {
-    if($.options.alwaysDoDifferentialUpdate || (use_diff !== undefined && use_diff)) {
+QueryWrapper.prototype.replaceWith = function(content, prop = {}) {
+    if(typeof prop.diff == 'undefined')
+        prop.diff = $.options.alwaysDoDifferentialUpdate;
+    if(prop.diff === true) {
         this.forEach(el => {
             morphdom(el, content);
         });
@@ -277,6 +378,14 @@ QueryWrapper.prototype.replaceWith = function(content, use_diff = undefined) {
 }
 
 QueryWrapper.prototype.query = function(selector) {
+    const found = Array.from(this).reduce((acc, el) => {
+        const results = el.querySelectorAll(selector);
+        return acc.concat(Array.from(results));
+    }, []);
+    return new QueryWrapper(found);
+}
+
+QueryWrapper.prototype.find = function(selector) {
     const found = Array.from(this).reduce((acc, el) => {
         const results = el.querySelectorAll(selector);
         return acc.concat(Array.from(results));
@@ -326,8 +435,12 @@ QueryWrapper.prototype.attr = function(name, value) {
 QueryWrapper.prototype.addClass = function(classNameOrList) {
     var classList = Array.isArray(classNameOrList) ? classNameOrList : [classNameOrList];
     this.forEach(function(el) {
-        classList.forEach(function(className) {
-            el.classList.add(className);
+        classList.forEach(function(classNames) {
+            // Split space-separated class names
+            var classes = classNames.toString().split(/\s+/).filter(function(name) { return name.length > 0; });
+            classes.forEach(function(className) {
+                el.classList.add(className);
+            });
         });
     });
     return this;
@@ -336,20 +449,66 @@ QueryWrapper.prototype.addClass = function(classNameOrList) {
 QueryWrapper.prototype.removeClass = function(classNameOrList) {
     var classList = Array.isArray(classNameOrList) ? classNameOrList : [classNameOrList];
     this.forEach(function(el) {
-        classList.forEach(function(className) {
-            el.classList.remove(className);
+        classList.forEach(function(classNames) {
+            // Split space-separated class names
+            var classes = classNames.toString().split(/\s+/).filter(function(name) { return name.length > 0; });
+            classes.forEach(function(className) {
+                el.classList.remove(className);
+            });
         });
     });
     return this;
 }
 
-QueryWrapper.prototype.css = function(styles, optOrValue = false) {
+QueryWrapper.prototype.toggleClass = function(classNameOrList, force) {
+    var classList = Array.isArray(classNameOrList) ? classNameOrList : [classNameOrList];
     this.forEach(function(el) {
-        if(optOrValue !== false) {
+        classList.forEach(function(classNames) {
+            // Split space-separated class names
+            var classes = classNames.toString().split(/\s+/).filter(function(name) { return name.length > 0; });
+            classes.forEach(function(className) {
+                if (typeof force !== 'undefined') {
+                    el.classList.toggle(className, force);
+                } else {
+                    el.classList.toggle(className);
+                }
+            });
+        });
+    });
+    return this;
+}
+
+QueryWrapper.prototype.empty = function() {
+    this.forEach(function(el) {
+        el.innerHTML = '';
+    });
+    return this;
+}
+
+QueryWrapper.prototype.css = function(styles, optOrValue) {
+    // If no arguments or first argument is a string (getter mode)
+    if (arguments.length === 0 || (typeof styles === 'string' && arguments.length === 1)) {
+        if (this.length === 0) return undefined;
+        var el = this[0];
+        if (typeof styles === 'string') {
+            // Get computed style for a specific property
+            return window.getComputedStyle(el)[styles];
+        } else {
+            // Return computed styles object (not commonly used)
+            return window.getComputedStyle(el);
+        }
+    }
+    
+    // Setter mode
+    this.forEach(function(el) {
+        if (typeof styles === 'string' && arguments.length >= 2) {
+            // Single property setter: .css('prop', 'value')
             el.style[styles] = optOrValue;
-            return;
-        } else for (var key in styles) {
-            el.style[key] = styles[key];
+        } else if (typeof styles === 'object') {
+            // Multiple properties setter: .css({prop1: 'value1', prop2: 'value2'})
+            for (var key in styles) {
+                el.style[key] = styles[key];
+            }
         }
     });
     return this;
@@ -365,7 +524,13 @@ QueryWrapper.prototype.each = function(callback) {
 QueryWrapper.prototype.append = function(child_or_html) {
     this.forEach(function(el) {
         if (typeof child_or_html === 'string' && el.insertAdjacentHTML) {
-            el.insertAdjacentHTML('beforeend', child_or_html);
+            if (child_or_html.includes('<script')) {
+                const result = executeScripts(child_or_html);
+                el.insertAdjacentHTML('beforeend', result.html);
+                result.scripts.forEach(executeScript);
+            } else {
+                el.insertAdjacentHTML('beforeend', child_or_html);
+            }
         } else if (el.appendChild) {
             if (typeof child_or_html === 'string') {
                 const tempDiv = document.createElement('div');
