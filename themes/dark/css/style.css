@@ -100,31 +100,37 @@ nav {
 	transition: all 0.3s ease;
 }
 
-nav > a {
+nav > a,
+.nav-menu a {
 	display: inline-flex;
 	align-items: center;
-	padding: 1rem 1.5rem;
+	padding: 0.625rem 1rem;
 	color: var(--text-primary);
 	text-decoration: none;
 	font-weight: 500;
 	transition: all 0.2s ease;
 	position: relative;
 	border-radius: var(--radius);
-	margin: 0.5rem 0.25rem;
+	margin: 0.35rem 0.15rem;
 }
 
-nav > a:first-child {
+nav > a:first-child,
+.nav-menu > a:first-child {
 	font-weight: 700;
 	color: var(--primary);
+	padding-left: 1.25rem;
+	padding-right: 1.25rem;
 }
 
-nav > a:hover {
+nav > a:hover,
+.nav-menu a:hover {
 	background: var(--surface-hover);
 	color: var(--primary);
-	transform: translateY(-1px);
+	text-decoration: none;
 }
 
-nav > a::after {
+nav > a::after,
+.nav-menu a::after {
 	content: '';
 	position: absolute;
 	bottom: 0;
@@ -136,8 +142,9 @@ nav > a::after {
 	transform: translateX(-50%);
 }
 
-nav > a:hover::after {
-	width: 80%;
+nav > a:hover::after,
+.nav-menu a:hover::after {
+	width: 60%;
 }
 
 /* Account area inside the nav */
@@ -152,20 +159,6 @@ nav > a:hover::after {
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
-}
-
-.nav-menu a {
-	display: inline-flex;
-	align-items: center;
-	padding: 0.5rem 0.75rem;
-	border-radius: var(--radius);
-	color: var(--text-primary);
-	text-decoration: none;
-}
-
-.nav-menu a:hover {
-	background: var(--surface-hover);
-	color: var(--primary);
 }
 
 nav.nav-scrolled {
@@ -193,24 +186,21 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-	font-size: 2.5rem;
-	background: var(--surface);
-	padding: 2rem;
-	border-radius: var(--radius-lg);
-	box-shadow: var(--shadow-md);
-	border: 1px solid var(--border);
+	font-size: 2rem;
 	position: relative;
-	overflow: hidden;
+	padding-bottom: 0.75rem;
+	margin-bottom: 1.25rem;
 }
 
 h1::before {
 	content: '';
 	position: absolute;
-	top: 0;
+	bottom: 0;
 	left: 0;
-	right: 0;
-	height: 4px;
+	width: 60px;
+	height: 3px;
 	background: var(--bg-gradient);
+	border-radius: 3px;
 }
 
 h2 {
@@ -222,20 +212,18 @@ h3 {
 }
 
 /* Modern Cards/Blocks */
-#content > div, .block, .card {
+#content > div:not(.ws-app), .block, .card {
 	background: var(--surface);
 	border: 1px solid var(--border);
 	border-radius: var(--radius-lg);
-	padding: 2rem;
-	margin-bottom: 2rem;
-	box-shadow: var(--shadow-md);
-	transition: all 0.3s ease;
-	position: relative;
-	overflow: hidden;
+	padding: 1.75rem;
+	margin-bottom: 1.5rem;
+	box-shadow: var(--shadow-sm);
+	transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
-#content > div:hover, .block:hover, .card:hover {
-	box-shadow: var(--shadow-lg);
+#content > div:not(.ws-app):hover, .block:hover, .card:hover {
+	box-shadow: var(--shadow-md);
 	border-color: var(--border-hover);
 }
 
