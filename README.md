@@ -49,6 +49,11 @@ is used as the `page` value.
 The `l-path` key refers to the actual URL path as given by the browser. For example, the `'views/index.php'`
 view uses this to invoke the correct sub-view.
 
+The starter also supports two additional patterns backported from downstream apps:
+
+- directory index routing: `/workspace` can resolve to `views/workspace/index.php`
+- parent-path fallback: `/workspace/activity` can resolve to `views/workspace/index.php` with `URL::$route['param'] === 'activity'`
+
 ## Components
 
 Components for reusable UI elements. Components are PHP files that return an array with render functions and metadata.
@@ -92,6 +97,15 @@ The starter now includes a small set of dashboard-focused building blocks backpo
 - `js/u-timeseries-chart.js` for multi-series canvas charts without pulling in a charting framework
 - `components/data/summary-metrics.php`, `components/data/sortable-table.php`, and `components/data/timeseries-chart.php`
 - `views/dashboard.php` as a working end-to-end example
+
+## Workspace Primitives
+
+The starter also includes a second backport slice from the `uh-ai` portal app:
+
+- `components/workspace/*` for app shells, sidebars, panel headers, status pills, empty states, and compact utility buttons
+- `themes/common/css/workspace.css` for the shared workspace shell styling
+- `js/u-workspace-shell.js` for simple responsive sidebar toggling
+- `views/workspace/index.php` as a nested-route demo for shell-style products
 
 ### Inline Components
 

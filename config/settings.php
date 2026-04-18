@@ -57,6 +57,7 @@
 			'page2' => array('title' => 'Ajaxy',),
 			'gauges' => array('title' => 'Gauges',),
 			'dashboard' => array('title' => 'Dashboard',),
+			'workspace' => array('title' => 'Workspace',),
 			'auth/demo' => array('title' => 'Auth',),
 		),
 	
