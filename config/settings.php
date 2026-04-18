@@ -104,6 +104,15 @@
 					'meta_description' => 'Local First admin-shell theme for the PHP starter',
 					'theme_color' => '#020913',
 				),
+				'retro-gaming' => array(
+					'label' => 'Retro Gaming',
+					'path' => 'themes/retro-gaming/',
+					'mode' => 'dark',
+					'description' => 'CRT scanlines, pixel font, neon glow – 8-bit nostalgia.',
+					'footer_text' => 'INSERT COIN // Web App Starter running the Retro Gaming theme.',
+					'meta_description' => 'Retro Gaming pixel theme for the PHP starter',
+					'theme_color' => '#0a0a1a',
+				),
 			),
 		),
 		'site' => array(
