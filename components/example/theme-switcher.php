@@ -4,14 +4,8 @@
 		$currentTheme = (string)cfg('theme/key');
 		$currentLabel = (string)first(cfg('theme/label'), $themes[$currentTheme]['label'] ?? $currentTheme);
 		$routePath = (string)(URL::$route['l-path'] ?? '');
-		$buildThemeLink = function($themeKey) use($routePath) {
-			if(cfg('url/pretty')) {
-				return URL::Link($routePath, ['theme' => $themeKey]);
-			}
-			if($routePath !== '') {
-				return URL::Link($routePath, ['theme' => $themeKey]);
-			}
-			return cfg('url/root') . '?' . http_build_query(['theme' => $themeKey]);
+        $buildThemeLink = function($themeKey) use($routePath) {
+            return URL::Link($routePath, ['theme' => $themeKey]);
 		};
         ?>
         <div id="theme-switcher" style="position: fixed; right: 1.5rem; bottom: 1.5rem; z-index: 9999; font-family: inherit;">
@@ -155,5 +149,5 @@
         <?php
     },
     
-    'about' => 'A floating theme switcher button that toggles between light and dark themes'
+    'about' => 'A floating theme picker that switches between all configured starter theme families'
 ]; 

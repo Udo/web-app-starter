@@ -10,8 +10,8 @@
 			if(is_array($text))
 				$text = str_replace(array('"', '\\'), '', json_encode($text));
 			$seg = array();
-			$seg[] = first($_SESSION['username'], 'anonymous');
-			$seg[] = $_SERVER['REMOTE_ADDR'];
+			$seg[] = first($_SESSION['username'] ?? false, 'anonymous');
+			$seg[] = first($_SERVER['REMOTE_ADDR'] ?? false, 'cli');
 			$seg[] = round(memory_get_peak_usage()/1024).'kB';
 			$seg[] = round(Profiler::get_time()).'ms';
 			$seg[] = $module;

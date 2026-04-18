@@ -24,50 +24,80 @@
     ]; */
 
     $GLOBALS['render_funcs'] = array();
+    $GLOBALS['id_counter'] = $GLOBALS['id_counter'] ?? 1;
 
-	function component_component_error_banner($s)
+    function component_error_banner($s)
 	{
-        ?><div class="banner"><?= safe($s) ?></div><?php
+        return '<div class="banner">'.safe($s).'</div>';
 	}
+
+    function component_caller_dir()
+    {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+        return isset($trace[1]['file']) ? dirname($trace[1]['file']) : getcwd();
+    }
+
+    function component_normalize_name($file_name)
+    {
+        return preg_replace('/\.php$/', '', trim((string)$file_name));
+    }
+
+    function component_resolve_file($file_name, $search_path = false)
+    {
+        $component_name = component_normalize_name($file_name);
+        $candidates = array($component_name.'.php');
+        if($search_path && !str_starts_with($component_name, 'components/'))
+            $candidates[] = rtrim($search_path, '/').'/'.$component_name.'.php';
+        if(!str_starts_with($component_name, 'components/'))
+            $candidates[] = 'components/'.$component_name.'.php';
+        foreach(array_unique($candidates) as $candidate)
+        {
+            if(file_exists($candidate))
+                return $candidate;
+        }
+        return false;
+    }
 
     /**
      * Loads a component from file system and registers it in the global registry
      * 
-     * Component files are searched in this order:
-     * 1. components/{component_name}.php
-     * 2. {search_path}/{component_name}.php (if search_path provided)
-     * 3. interface/{component_name}.php
+    * Component files are searched in this order:
+    * 1. exact file path passed to the loader
+    * 2. caller-relative path (for shorthand component names)
+    * 3. components/{component_name}.php
      * 
      * Component files should return an array with render functions like:
      * return ['render' => function($prop) { ... }];
      */
     function component_get_func($file_name, $return_false_if_not_found = false, $search_path = false)
     {
+        $component_name = component_normalize_name($file_name);
         $result = [];
         // Check if component is already loaded in global registry
-        if(!isset($GLOBALS['render_funcs'][$file_name]))
+        if(!isset($GLOBALS['render_funcs'][$component_name]))
         {
-            if(file_exists($file_name.'.php'))
+            $component_file = component_resolve_file($component_name, $search_path);
+            if($component_file)
             {
-                $result['component_file'] = $file_name.'.php';
+                $result['component_file'] = $component_file;
             }
             else
             {
                 // Component file not found - create error component
                 if($return_false_if_not_found) return(false);
                 $result['component_file'] = false;
-                $result['error'] = 'Component not found: '.$file_name;
-                $result['render'] = function() use($file_name, $rcontent, $search_path) {
-                    return('<div class="banner">component not found: '.$file_name.'</div>');
+                $result['error'] = 'Component not found: '.$component_name;
+                $result['render'] = function() use($component_name) {
+                    return component_error_banner('component not found: '.$component_name);
                 };
             }
             if($result['component_file'])
             foreach(require($result['component_file']) as $k => $v)
                 $result[$k] = $v;
             // Register component in global registry for future use
-            $GLOBALS['render_funcs'][$file_name] = $result;
+            $GLOBALS['render_funcs'][$component_name] = $result;
         }
-        return($GLOBALS['render_funcs'][$file_name]);
+        return($GLOBALS['render_funcs'][$component_name]);
     }
 
 /**
@@ -76,7 +106,7 @@
  */
 function component_exists($file_name)
 {
-	$caller_dir = dirname(debug_backtrace()[0]['file']);
+    $caller_dir = component_caller_dir();
 	return(component_get_func($file_name, true, $caller_dir) !== false);
 }
 
@@ -86,8 +116,14 @@ function component_exists($file_name)
  */
 function component_load($file_name)
 {
-	$caller_dir = dirname(debug_backtrace()[0]['file']);
+    $caller_dir = component_caller_dir();
 	return(component_get_func($file_name, true, $caller_dir));
+}
+
+function component_call($file_name, $render_call, $prop = array())
+{
+    $prop['render_call'] = $render_call;
+    return component($file_name, $prop);
 }
 
 /**
@@ -110,25 +146,25 @@ function component_declare($file_name, $render_prop)
 /**
  * Main component rendering function - the heart of the component system
  * 
- * @param string $file_name - Component name (can include render method like 'comp:method')
+ * @param string $file_name - Component name or path
  * @param array $prop - Properties/data to pass to component
- * @return mixed - Component output (HTML string or structured data)
+ * @return mixed - Component output from the selected render method
  * 
  * Component calling examples:
- * component('button', ['text' => 'Click me'])
- * component('section:begin', ['options' => [...]]) use the 'begin' render function
- * component('section:end'])   use the 'end' render function
- * component('form', ['return_struct' => true]) // Returns structured data
+ * component('components/example/theme-switcher')
+ * component_call('components/workspace/panel', 'render', ['title' => 'Status'])
+ * component('workspace/panel', ['render_call' => 'render'])
  */
 function component($file_name, $prop = array())
 {
     Profiler::log('component '.$file_name, 1);
-	$caller_dir = dirname(debug_backtrace()[0]['file']);
+    $caller_dir = component_caller_dir();
 	if($file_name == '')
 		return(component_error_banner('[component name empty]'));
+    $file_name = component_normalize_name($file_name);
 
     // Default render method is 'render', but can be overridden
-    $prop['render_call'] = first($prop['render_call'], 'render');
+    $prop['render_call'] = first($prop['render_call'] ?? false, 'render');
     
     // Support for calling specific render methods: 'component:method'
     if(stristr($file_name, ':')) // you can specify which render function to call
@@ -138,22 +174,24 @@ function component($file_name, $prop = array())
     }
     
     // Get component definition from registry (load if not already loaded)
-	$renderer = &$GLOBALS['render_funcs'][$file_name];
+    $renderer = $GLOBALS['render_funcs'][$file_name] ?? false;
     if(!$renderer) 
     {
         // Component not in registry - try to load from file
         component_get_func($file_name, false, $caller_dir);
-    	$renderer = &$GLOBALS['render_funcs'][$file_name];
+        	$renderer = $GLOBALS['render_funcs'][$file_name] ?? false;
     }
 
     // Generate unique ID for component instance if not provided
-	$prop['id'] = $prop['id'] ? $prop['id'] : 'c'.($GLOBALS['id_counter']++);
+    $prop['id'] = !empty($prop['id']) ? $prop['id'] : 'c'.($GLOBALS['id_counter']++);
 	$prop['filename'] = $file_name;
 
-    if(is_callable($renderer[$prop['render_call']]))
+    if(isset($renderer[$prop['render_call']]) && is_callable($renderer[$prop['render_call']]))
         $result = ($renderer[$prop['render_call']]($prop, $renderer));
-    else
+    else if(isset($renderer[$prop['render_call']]))
         $result = ($renderer[$prop['render_call']]);
+    else
+        $result = component_error_banner('component render method not found: '.$file_name.':'.$prop['render_call']);
 
     Profiler::log(false, -1);
     return($result);

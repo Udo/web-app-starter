@@ -1,4 +1,8 @@
-<?php include_css('marketing.css') ?>
+<?php
+    include_css('marketing.css');
+    $themeOptions = (array)cfg('theme/options');
+    $featuredThemeKeys = array('portal-light', 'portal-dark', 'localfirst');
+?>
 
 <?= component('components/example/hero-section', [
     'title' => 'Stunning Apps',
@@ -74,21 +78,13 @@
 <h2>Theme Families</h2>
 <p>Compare the starter’s built-in theme families and jump to the live gallery.</p>
 <div class="theme-grid">
+    <?php foreach($featuredThemeKeys as $themeKey): $themeInfo = $themeOptions[$themeKey] ?? null; if(!$themeInfo) continue; ?>
     <div class="component-card">
-        <h3>AI Portal Light</h3>
-        <p>B612-heavy portal shell with dense navigation and a corporate light palette.</p>
-        <a class="btn" href="<?= URL::Link('themes', ['theme' => 'portal-light']) ?>">Preview Theme</a>
+        <h3><?= safe((string)$themeInfo['label']) ?></h3>
+        <p><?= safe((string)first($themeInfo['description'] ?? false, 'Reusable starter theme family.')) ?></p>
+        <a class="btn" href="<?= URL::Link('themes', ['theme' => $themeKey]) ?>">Preview Theme</a>
     </div>
-    <div class="component-card">
-        <h3>AI Portal Dark</h3>
-        <p>The new default: a glassy dark layout that works across marketing and admin routes.</p>
-        <a class="btn" href="<?= URL::Link('themes', ['theme' => 'portal-dark']) ?>">Preview Theme</a>
-    </div>
-    <div class="component-card">
-        <h3>Local First</h3>
-        <p>Cyan and orange admin shell derived from llm2, best suited for dashboard-style products.</p>
-        <a class="btn" href="<?= URL::Link('themes', ['theme' => 'localfirst']) ?>">Preview Theme</a>
-    </div>
+    <?php endforeach; ?>
     <div class="component-card">
         <h3>Starter Themes</h3>
         <p>The original light and dark starter skins remain available in the same gallery for side-by-side checks.</p>

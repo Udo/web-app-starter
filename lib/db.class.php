@@ -14,7 +14,7 @@ class DB
 		
 	static function isConnected()
 	{
-		return(is_resource(self::$link));
+		return(self::$link instanceof mysqli);
 	}
 
 	static function connect()
@@ -27,7 +27,7 @@ class DB
 				' could not be established (code: '.@mysqli_connect_errno(self::$link).': '.@mysqli_connect_error(self::$link).')');
 		#if(mysqli_character_set_name(self::$link) != 'utf8') 
 		mysqli_set_charset(self::$link, 'utf8mb4');
-		self::$track_changes_in_tables = cfg('track-changes');
+		self::$track_changes_in_tables = cfg('track/changes');
 		Profiler::Log('DB::Connect() done');
 	}
 	
@@ -52,7 +52,7 @@ class DB
 	}
 
 	# get a list of datasets matching the $query
-	static function Get($query, $parameters = null)
+	static function Get($query, $parameters = null, $keyByField = null)
 	{
 		self::$readOps++;
 		$result = array();
@@ -63,7 +63,7 @@ class DB
 	
 		while ($line = mysqli_fetch_array($lines, MYSQLI_ASSOC))
 		{
-			if (isset($keyByField))
+			if ($keyByField !== null && isset($line[$keyByField]))
 				$result[$line[$keyByField]] = $line;
 			else
 				$result[] = $line;
@@ -77,8 +77,8 @@ class DB
 	# gets a list of keys for the table
 	static function Keys($tablename)
 	{		
-		if(isset(self::$keyDef[$otablename]))
-			return(self::$keyDef[$otablename]);
+		if(isset(self::$keyDef[$tablename]))
+			return(self::$keyDef[$tablename]);
 			
 		self::$readOps++;
 		$result = array();
@@ -92,7 +92,7 @@ class DB
 		}
 		
 		Profiler::Log('DB::Keys('.$tablename.') REBUILD KEY CACHE');
-		self::$keyDef[$otablename] = $result;
+		self::$keyDef[$tablename] = $result;
 		return($result);
 	}
 	
@@ -100,7 +100,7 @@ class DB
 	static function Info($table)
 	{
 		self::$readOps++;
-		$result = array();
+		$result = array('fields' => array(), 'info' => array());
 		foreach(self::Get('SHOW FULL COLUMNS FROM #'.$table) as $fld)
 		{
 			$ds = array();
@@ -123,7 +123,6 @@ class DB
 			$ds['caption'] = first($ds['_title'], $ds['field']);
 			$result['fields'][$ds['field']] = $ds;
 		}
-		$result['info'] = $extInfo;
 		return($result);  
 	}
 	
@@ -131,8 +130,6 @@ class DB
 	static function Insert($tablename, $dataset)
 	{
 		self::$writeOps++;
-		$cache_entry = $tablename.':'.$keyname.':'.$keyvalue;
-
 		$query='INSERT INTO '.$tablename.' ('.DB::MakeNamesList($dataset).
 				') VALUES('.DB::MakeValuesList($dataset).')';
 				
@@ -151,7 +148,6 @@ class DB
 		Profiler::Log('DB::Commit('.$tablename.', '.$dataset[$keyname].') start');
 		
 		$cache_entry = $tablename.':'.$keyname.':'.$keyvalue;
-		$oldData = self::$dataCache[$cache_entry];
 		unset(self::$dataCache[$cache_entry]);
 		
 		$query='REPLACE INTO '.$tablename.' ('.DB::MakeNamesList($dataset).
@@ -372,7 +368,7 @@ class DB
  
 	static function Safe($raw)
 	{
-		if(!isset(self::$link))
+		if(!self::$link)
 			return(addslashes($raw));
 		else
 			return(mysqli_real_escape_string(self::$link, $raw));

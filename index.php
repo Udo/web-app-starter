@@ -3,47 +3,28 @@
 	include('config/settings.php');
 	include('lib/ulib.php');
 	include('lib/components.php');
+	include('lib/theme_helpers.php');
 
 	URL::MakeRoute();
 
 	Profiler::log('main content: start', 1);
 
-	$content_file = 'views/'.first(URL::$route['l-path'], 'index');
-	$dir_index_file = $content_file.'/index';
 	ob_start();
-	if(file_exists($content_file.'.php'))
+	$route_match = URL::ResolveViewFile('views');
+	if($route_match)
 	{
-		require($content_file.'.php');
-	}
-	else if(file_exists($dir_index_file.'.php'))
-	{
-		require($dir_index_file.'.php');
+		if(isset($route_match['param']))
+			URL::$route['param'] = $route_match['param'];
+		require($route_match['file']);
 	}
 	else
 	{
-		$lpath_parts = explode('/', URL::$route['l-path']);
-		if(count($lpath_parts) > 1)
-		{
-			$last_seg = array_pop($lpath_parts);
-			$parent_file = 'views/'.implode('/', $lpath_parts).'/index';
-			if(file_exists($parent_file.'.php'))
-			{
-				URL::$route['param'] = $last_seg;
-				require($parent_file.'.php');
-			}
-			else
-			{
-				header('HTTP/1.0 404 Not Found');
-				echo '<h1>404 Not Found</h1>';
-				echo '<p>The requested page does not exist.</p>';
-			}
-		}
-		else
-		{
-			header('HTTP/1.0 404 Not Found');
-			echo '<h1>404 Not Found</h1>';
-			echo '<p>The requested page does not exist.</p>';
-		}
+		URL::NotFound('The requested page does not exist.');
+		URL::$route['page-title'] = '404 Not Found';
+		echo '<section class="card">';
+		echo '<h1>404 Not Found</h1>';
+		echo '<p>'.safe(URL::$error).'</p>';
+		echo '</section>';
 	}
 	URL::$fragments['main'] = ob_get_clean();
 

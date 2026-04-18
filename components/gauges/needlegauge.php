@@ -1,6 +1,6 @@
 <script>
 
-NeedlegaugeComponents = { 
+window.NeedlegaugeComponents = window.NeedlegaugeComponents || { 
 
 	start_listen : function(prop) {
 		$.events.on('value-broadcast', function(data) {
@@ -9,7 +9,7 @@ NeedlegaugeComponents = {
 				let item = Object.assign({}, prop.scale, prop.items[data.name]);
 				$('#' + prop.id + '-' + data.name + '-value').text(data.value + (item.unit || ''));
 				let vrange = (item.max || 100) - (item.min || 0);
-				let pct_value = clamp((data.value - (item.min || 0)) / vrange, 0, 1);
+				let pct_value = GaugeComponents.clampValue((data.value - (item.min || 0)) / vrange, 0, 1);
 				let angle = -Math.PI + item.angle_start + (pct_value * (item.angle_end - item.angle_start));
 				$('#' + prop.id + '-' + data.name + '-needle').css('transform', 'rotate(' + angle + 'rad)');
 				
@@ -22,33 +22,47 @@ NeedlegaugeComponents = {
 </script><?php 
 
 include_js('components/gauges/common.js');
-include_css('components/gauges/common.css');
+include_css('themes/common/css/gauges.css');
 
 return [
 
 	'render' => function($prop) {
-		$prop['id'] = $prop['id'] ?: 'needlegauge-' . uniqid();
-		$prop['size'] = first($prop['size'], 200);
+		$prop['id'] = !empty($prop['id']) ? $prop['id'] : 'needlegauge-' . uniqid();
+		$prop['style'] = (string)($prop['style'] ?? '');
+		$prop['items'] = (array)($prop['items'] ?? array());
+		$prop['scale'] = (array)($prop['scale'] ?? array());
+		$prop['size'] = first($prop['size'] ?? false, 200);
+		$prop['subtitle'] = (string)($prop['subtitle'] ?? '');
 		$prop['scale']['angle_start'] = first($prop['scale']['angle_start'], -pi());
 		$prop['scale']['angle_end'] = first($prop['scale']['angle_end'], 0);
-		$prop['img_height'] = first($prop['img_height'], 
+		$prop['img_height'] = first($prop['img_height'] ?? false, 
 			$prop['size'] * max(cos(first($prop['scale']['angle_start'], -pi())), cos(first($prop['scale']['angle_end'], 0))));
 		?>        
-		<div class="block needlegauge" id="<?= $prop['id'] ?>" style="<?= $prop['style'] ?>">
+		<section class="gauge-set needlegauge-set" id="<?= $prop['id'] ?>" style="<?= $prop['style'] ?>">
 			<?php if(isset($prop['title'])) { ?>
-				<h3><?= safe($prop['title']) ?></h3>
+				<div class="gauge-set-header">
+					<h3><?= safe($prop['title']) ?></h3>
+					<?php if($prop['subtitle'] !== '') { ?><p><?= safe($prop['subtitle']) ?></p><?php } ?>
+				</div>
 			<?php } ?>
-			<div class="needlegauge-container" style="">
+			<div class="needlegauge-grid">
 			<?php
 			foreach($prop['items'] as $item_id => $item) 
 			{
 				$item = array_merge($prop['scale'], $item);
-				$vrange = (first($item['max'], 100) - first($item['min'], 0));
-				$pct_value = clamp(($item['value'] - first($item['min'], 0)) / $vrange, 0, 1);
+				$item['min'] = first($item['min'] ?? false, 0);
+				$item['max'] = first($item['max'] ?? false, 100);
+				$item['tooltip'] = (string)($item['tooltip'] ?? '');
+				$item['unit'] = (string)($item['unit'] ?? '');
+				$item['color'] = $item['color'] ?? false;
+				$item['label'] = (string)first($item['label'] ?? false, ucfirst((string)$item_id));
+				$vrange = ($item['max'] - $item['min']);
+				$pct_value = clamp(($item['value'] - $item['min']) / $vrange, 0, 1);
 				$needle_angle = -pi() + $item['angle_start'] + ($pct_value * ($item['angle_end'] - $item['angle_start']));
-				$needle_color = first($item['color'], '#888888');
+				$needle_color = first($item['color'] ?? false, '#888888');
 				if(is_array($item['color'])) {
-					$needle_color = pick_entry_from_range($item['color'], $item['value'])['color'];
+					$color_entry = pick_entry_from_range($item['color'], $item['value']);
+					$needle_color = first($color_entry['color'] ?? false, '#888888');
 				}
 				$tick_interval = first($item['ticks-every'], $vrange / 20);
 				$label_interval = first($item['value-labels-every'], $vrange / 4);
@@ -93,10 +107,12 @@ return [
 				}
 
 			?>
-			<div class="needlegauge-item" style="text-align: center;">
+			<section class="gauge-card needlegauge-card">
+				<div class="gauge-metric-label needlegauge-label-head"><?= safe($item['label']) ?></div>
 				
+				<div class="needlegauge-visual">
 				<svg id="<?= $prop['id'] ?>-<?= $item_id ?>-svg" width="<?= $prop['size'] ?>" height="<?= $prop['img_height'] ?>" class="needlegauge-svg"
-					viewBox="0 0 <?= $prop['size'] ?> <?= $prop['img_height'] ?>" style="max-width: 100%;">
+					viewBox="0 0 <?= $prop['size'] ?> <?= $prop['img_height'] ?>">
 
 					<?php
 					if(is_array($item['color']))  
@@ -123,33 +139,30 @@ return [
 					
 					<line id="<?= $prop['id'] ?>-<?= $item_id ?>-needle" class="needle"
 						x1="<?= $prop['size']*0.55 ?>" y1="<?= $prop['size']*0.5 ?>" x2="<?= $prop['size']*0.1 ?>" y2="<?= $prop['size']*0.5 ?>" 
-						stroke="<?= ($tick_color) ?>" stroke-width="3" stroke-linecap="round"
+						stroke="<?= ($needle_color) ?>" stroke-width="3" stroke-linecap="round"
 						style="transform-origin: <?= $prop['size']/2 ?>px <?= $prop['size']/2 ?>px; 
 							transform: rotate(<?= ($needle_angle) ?>rad); transition: transform 0.3s ease;"/>
 
-					<circle cx="<?= $prop['size']/2 ?>" cy="<?= $prop['size']/2 ?>" r="6" fill="<?= $tick_color ?>"/>
+					<circle cx="<?= $prop['size']/2 ?>" cy="<?= $prop['size']/2 ?>" r="6" fill="<?= $needle_color ?>"/>
 
 				</svg>
+				</div>
 				
-				<div class="needlegauge-info" style="margin-top: -50px;">
-					<div class="needlegauge-value" id="<?= $prop['id'] ?>-<?= $item_id ?>-value" 
+				<div class="needlegauge-info">
+					<div class="gauge-metric-value needlegauge-value" id="<?= $prop['id'] ?>-<?= $item_id ?>-value" 
 						 title="<?= asafe($item['tooltip']) ?>">
 						<?= safe($item['value']) ?><?= safe($item['unit']) ?>
 					</div>
-					<?php if(isset($item['label'])) { ?>
-						<div class="needlegauge-label" style="font-weight: bold;">
-							<?= safe($item['label']) ?>
-						</div>
-					<?php } ?>
+					<?php if($item['tooltip'] !== '') { ?><div class="gauge-metric-meta needlegauge-meta"><?= safe($item['tooltip']) ?></div><?php } ?>
 				</div>
-			</div>
+			</section>
 			<?php
 			}
 			?>
 			</div>
-		</div>
+		</section>
 		<?php
-		if($prop['listen'])
+		if(!empty($prop['listen']))
 		{
 			?><script>
 			NeedlegaugeComponents.start_listen(<?= jsafe($prop) ?>);    

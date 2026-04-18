@@ -49,7 +49,7 @@
                         font-size: 0.9rem;
                         line-height: 1.5;
                     ">
-                        <?= first($prop['text'], 
+						<?= first($prop['text'] ?? false, 
                             'We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. 
                         By clicking "Accept All", you consent to our use of cookies.') ?>
                         <a href="#" id="cookie-policy-link" style="
@@ -117,13 +117,13 @@
             
             if (!cookieConsent) return;
             
-            let COOKIE_NAME = <?= jsafe(first($prop['cookie_name'], 'cookie_consent')) ?>;
-            let COOKIE_EXPIRY_DAYS = <?= jsafe(first($prop['expiry_days'], 365)) ?>;
+            let COOKIE_NAME = <?= jsafe(first($prop['cookie_name'] ?? false, 'cookie_consent')) ?>;
+            let COOKIE_EXPIRY_DAYS = <?= jsafe(first($prop['expiry_days'] ?? false, 365)) ?>;
             
             // Check if user has already made a choice
             let existingConsent = getCookie(COOKIE_NAME);
             <?php 
-            if($prop['reset'])
+            if(!empty($prop['reset']))
             {
                 $_COOKIE[$COOKIE_NAME] = '';
                 ?>existingConsent = false;<?php

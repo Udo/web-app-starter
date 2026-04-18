@@ -56,9 +56,9 @@ The starter also supports two additional patterns backported from downstream app
 
 ## Components
 
-Components for reusable UI elements. Components are PHP files that return an array with render functions and metadata.
+Components are reusable PHP-backed view fragments. A component file returns an array with one or more render functions plus optional metadata.
 
-Example and standard components are located in the `components/` directory, but you can put them anywhere.
+The default starter convention is to keep reusable components in `components/`. The loader supports explicit paths like `components/example/theme-switcher` and shorthand names like `example/theme-switcher`, which resolve under `components/`.
 
 ```php
 <?php return [
@@ -75,18 +75,15 @@ Example and standard components are located in the `components/` directory, but 
 ### Using Components
 
 ```php
-<?= component('components/basic/button', [
-	'text' => 'Click me',
-	'type' => 'primary'
-]) ?>
+<?= component('components/example/theme-switcher') ?>
 ```
 
-**Using Specific Render Methods:**
+**Using a Specific Render Method Explicitly:**
 ```php
-<?= component('components/layout/section:begin', ['class' => 'hero']) ?>
-	<h1>Content here</h1>
-<?= component('components/layout/section:end') ?>
+<?= component_call('components/workspace/panel', 'render', ['title' => 'Status']) ?>
 ```
+
+The older `component-name:method` shorthand is still supported for backwards compatibility, but `component_call()` or an explicit `render_call` prop is the preferred API because it is clearer and easier to grep.
 
 ## Dashboard Primitives
 
@@ -109,17 +106,40 @@ The starter also includes a second backport slice from the `uh-ai` portal app:
 
 ## Theme Families
 
-The starter now also includes named theme families derived from the `uh-ai` portal app and the `uh-llm2` admin shell:
+The starter now includes named theme families derived from the `uh-ai` portal app and the `uh-llm2` admin shell:
 
 - `portal-light` for the B612-based corporate portal look
 - `portal-dark` for the glassy dark portal shell and the current default starter theme
 - `localfirst` for the cyan/orange llm2-style admin shell
 
-Theme choice is now resolved server-side from `config/settings.php`, with a validated theme key stored in the `starter_theme` cookie. The floating theme picker updates the current request route and persists the selection for later navigation.
+Theme choice is resolved server-side from `config/settings.php`, with a validated theme key stored in the `starter_theme` cookie. Theme metadata such as descriptions, footer text, and browser theme colors now live in the same config entry as the theme path, so the gallery, page shell, and docs all read from the same source of truth.
 
 To compare themes side by side, use `/?themes`. The gallery embeds a shared `/?theme-preview` route under every available theme so you can evaluate shell chrome, content density, and form styling with the same fixture.
 
+The page shell is now split between theme CSS/assets and shared helper functions in `lib/theme_helpers.php`, which keeps the four top-nav themes aligned while still allowing `localfirst` to provide its own admin-shell layout.
+
 The homepage demo form now includes proper `id` and `name` attributes so the starter does not emit the earlier label/field accessibility warnings on the landing page.
+
+## Gauge Primitives
+
+The gauges demo now contains two gauge families from `uh-llm2`:
+
+- `components/gauges/progressbar.php` and `components/gauges/needlegauge.php` for the original bar and needle gauges
+- `components/gauges/arcgauge.php` for the llm2-style SVG KPI arc gauges with optional watermark tracking
+
+Abstract gauge classes live in `themes/common/css/gauges.css`, so the components stay theme-aware through CSS variables instead of shipping a competing visual system.
+
+## Testing
+
+The starter now includes a no-dependency smoke suite under `tests/`.
+
+Run it with:
+
+```bash
+php tests/smoke.php
+```
+
+It covers route resolution, link generation, component lookup, shorthand component rendering, and centralized theme metadata.
 
 ### Inline Components
 

@@ -1,7 +1,17 @@
 <?php 
-	
-	error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
-	ini_set('display_errors', 'on');
+
+	$debug_env = getenv('APP_DEBUG');
+	$debug_enabled = $debug_env === false
+		? true
+		: filter_var($debug_env, FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE);
+	if($debug_enabled === null)
+		$debug_enabled = true;
+	$error_reporting_level = $debug_enabled
+		? E_ALL
+		: (E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_WARNING);
+
+	error_reporting($error_reporting_level);
+	ini_set('display_errors', $debug_enabled ? 'on' : 'off');
 	
 	// Handle JSON POST requests
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -28,6 +38,11 @@
 	define('ONE_YEAR', 60*60*24*30*365);
 	
 	$GLOBALS['config'] = array(
+		'debug' => array(
+			'enabled' => $debug_enabled,
+			'display_errors' => $debug_enabled,
+			'reporting' => $error_reporting_level,
+		),
 	
 		'url' => array(
 			'pretty' => false,
@@ -38,20 +53,68 @@
 			'key' => 'portal-dark',
 			'path' => 'themes/portal-dark/',	
 			'mode' => 'dark',
+			'label' => 'AI Portal Dark',
+			'description' => 'Glassy dark portal shell and the current default starter theme.',
+			'footer_text' => 'Web App Starter running with the AI Portal Dark starter theme.',
+			'meta_description' => 'AI Portal Dark theme for the PHP starter',
+			'theme_color' => '#0f172a',
 			'options' => array(
-				'light' => array('label' => 'Starter Light', 'path' => 'themes/light/', 'mode' => 'light'),
-				'dark' => array('label' => 'Starter Dark', 'path' => 'themes/dark/', 'mode' => 'dark'),
-				'portal-light' => array('label' => 'AI Portal Light', 'path' => 'themes/portal-light/', 'mode' => 'light'),
-				'portal-dark' => array('label' => 'AI Portal Dark', 'path' => 'themes/portal-dark/', 'mode' => 'dark'),
-				'localfirst' => array('label' => 'Local First', 'path' => 'themes/localfirst/', 'mode' => 'dark'),
+				'light' => array(
+					'label' => 'Starter Light',
+					'path' => 'themes/light/',
+					'mode' => 'light',
+					'description' => 'Original starter light theme kept for backward compatibility.',
+					'footer_text' => 'Web App Starter running with the Starter Light theme.',
+					'meta_description' => 'Starter Light theme for the PHP starter',
+					'theme_color' => '#3b82f6',
+				),
+				'dark' => array(
+					'label' => 'Starter Dark',
+					'path' => 'themes/dark/',
+					'mode' => 'dark',
+					'description' => 'Original starter dark theme kept for backward compatibility.',
+					'footer_text' => 'Web App Starter running with the Starter Dark theme.',
+					'meta_description' => 'Starter Dark theme for the PHP starter',
+					'theme_color' => '#0f172a',
+				),
+				'portal-light' => array(
+					'label' => 'AI Portal Light',
+					'path' => 'themes/portal-light/',
+					'mode' => 'light',
+					'description' => 'Dense, corporate portal layout in a light palette.',
+					'footer_text' => 'Web App Starter running with the AI Portal Light starter theme.',
+					'meta_description' => 'AI Portal Light theme for the PHP starter',
+					'theme_color' => '#0f68ad',
+				),
+				'portal-dark' => array(
+					'label' => 'AI Portal Dark',
+					'path' => 'themes/portal-dark/',
+					'mode' => 'dark',
+					'description' => 'Glassy dark portal shell and the current default starter theme.',
+					'footer_text' => 'Web App Starter running with the AI Portal Dark starter theme.',
+					'meta_description' => 'AI Portal Dark theme for the PHP starter',
+					'theme_color' => '#0f172a',
+				),
+				'localfirst' => array(
+					'label' => 'Local First',
+					'path' => 'themes/localfirst/',
+					'mode' => 'dark',
+					'description' => 'llm2-derived admin shell with sidebar chrome.',
+					'footer_text' => 'Web App Starter running with the Local First starter theme.',
+					'meta_description' => 'Local First admin-shell theme for the PHP starter',
+					'theme_color' => '#020913',
+				),
 			),
 		),
 		'site' => array(
 			'name' => 'Web App Starter',
 			'default_page_title' => 'Home',
-			'include_paths' => ['views/', 'components/', ''],
+			'include_paths' => ['views/', 'components/'],
 			'autostart_session' => true,
 			'timezone' => 'UTC',
+		),
+		'track' => array(
+			'changes' => array(),
 		),
 		'filebase' => [
 			'path' => '/tmp/',
@@ -82,10 +145,11 @@
 	}
 	if(isset($theme_options[$requested_theme]))
 	{
+		foreach($theme_options[$requested_theme] as $theme_field => $theme_value)
+		{
+			$GLOBALS['config']['theme'][$theme_field] = $theme_value;
+		}
 		$GLOBALS['config']['theme']['key'] = $requested_theme;
-		$GLOBALS['config']['theme']['path'] = $theme_options[$requested_theme]['path'];
-		$GLOBALS['config']['theme']['mode'] = $theme_options[$requested_theme]['mode'] ?? 'light';
-		$GLOBALS['config']['theme']['label'] = $theme_options[$requested_theme]['label'] ?? $requested_theme;
 	}
 	if(isset($_GET['theme']) && $_GET['theme'] === $requested_theme)
 	{

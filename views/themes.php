@@ -18,7 +18,7 @@
 				<div class="theme-gallery-head">
 					<div>
 						<h2><?= safe((string)$themeInfo['label']) ?></h2>
-						<p><?= $themeKey === 'localfirst' ? 'llm2-derived admin shell with sidebar chrome.' : ($themeKey === 'portal-light' ? 'Dense, corporate portal layout in a light palette.' : ($themeKey === 'portal-dark' ? 'Glassy dark portal shell and the new starter default.' : 'Original starter theme kept for backward compatibility.')) ?></p>
+						<p><?= safe((string)first($themeInfo['description'] ?? false, 'Reusable starter theme family.')) ?></p>
 					</div>
 					<?php if($themeKey === $currentTheme): ?><span class="theme-gallery-badge">Active</span><?php endif; ?>
 				</div>

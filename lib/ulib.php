@@ -11,11 +11,27 @@ spl_autoload_register(function ($class_name) {
 
 Profiler::start();
 
+function url_root()
+{
+	$root = (string)cfg('url/root');
+	if($root !== '' && substr($root, -1) !== '/')
+		$root .= '/';
+	return $root;
+}
+
 function get_file_location($file, $error_if_not_found = true)
 {
-	if(file_exists($file)) return $file;
-	foreach($GLOBALS['config']['site']['include_paths'] as $path)
+	$file = ltrim((string)$file, '/');
+	if(str_contains($file, '..'))
 	{
+		if($error_if_not_found)
+			die('invalid file path: '.$file);
+		return false;
+	}
+	if(file_exists($file)) return $file;
+	foreach((array)$GLOBALS['config']['site']['include_paths'] as $path)
+	{
+		$path = rtrim((string)$path, '/').'/';
 		if(file_exists($path.$file)) return $path.$file;
 	}
 	if($error_if_not_found)
@@ -23,20 +39,27 @@ function get_file_location($file, $error_if_not_found = true)
 	return false;
 }
 
+function asset_already_included($file_location)
+{
+	static $included_assets = array();
+	if(isset($included_assets[$file_location]))
+		return true;
+	$included_assets[$file_location] = true;
+	return false;
+}
+
 function include_js($src_file)
 {
 	if(!($file_location = get_file_location($src_file))) return;
-	if($GLOBALS['include_once'][$file_location]) return;
-	$GLOBALS['include_once'][$file_location] = true;
-	?><script src="<?= cfg('url/root').$file_location ?>?v=<?= filemtime($file_location) ?>"></script><?php
+	if(asset_already_included($file_location)) return;
+	?><script src="<?= url_root().$file_location ?>?v=<?= filemtime($file_location) ?>"></script><?php
 }
 
 function include_css($src_file)
 {
 	if(!($file_location = get_file_location($src_file))) return;
-	if($GLOBALS['include_once'][$file_location]) return;
-	$GLOBALS['include_once'][$file_location] = true;
-	?><link rel="stylesheet" href="<?= cfg('url/root').$file_location ?>?v=<?= filemtime($file_location) ?>" /><?php
+	if(asset_already_included($file_location)) return;
+	?><link rel="stylesheet" href="<?= url_root().$file_location ?>?v=<?= filemtime($file_location) ?>" /><?php
 }
 	
 # **************************** GENERAL UTILITY FUNCTIONS ******************************
@@ -121,11 +144,13 @@ function cfg($key)
 	$lastSeg = array_pop($seg);
 	foreach($seg as $s)
 	{
-		if(is_array($config[$s]))
+		if(is_array($config) && array_key_exists($s, $config) && is_array($config[$s]))
 			$config = $config[$s];
 		else
-			$config = array();	
+			return null;
 	}
+	if(!is_array($config) || !array_key_exists($lastSeg, $config))
+		return null;
 	return($config[$lastSeg]);
 }
 
