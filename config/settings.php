@@ -56,6 +56,7 @@
 			'features' => array('title' => 'Features',),
 			'page2' => array('title' => 'Ajaxy',),
 			'gauges' => array('title' => 'Gauges',),
+			'dashboard' => array('title' => 'Dashboard',),
 			'auth/demo' => array('title' => 'Auth',),
 		),
 	

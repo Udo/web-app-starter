@@ -27,7 +27,7 @@
 
 	function component_component_error_banner($s)
 	{
-		?><div class="banner"><?= safe($s) ?></div><?
+        ?><div class="banner"><?= safe($s) ?></div><?php
 	}
 
     /**

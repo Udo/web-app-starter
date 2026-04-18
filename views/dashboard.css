@@ -1,0 +1,205 @@
+.dashboard-intro p,
+.dashboard-panel-header p,
+.dashboard-note {
+	color: var(--text-secondary);
+	max-width: 72ch;
+}
+
+.dashboard-panel {
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-lg);
+	box-shadow: var(--shadow-md);
+	margin-bottom: 2rem;
+	overflow: hidden;
+	padding: 1.5rem;
+}
+
+.dashboard-panel-header {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	margin-bottom: 1.25rem;
+}
+
+.dashboard-panel-header h2 {
+	font-size: 1.4rem;
+	margin-bottom: 0;
+}
+
+.dashboard-stat-grid {
+	display: grid;
+	gap: 1rem;
+	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.dashboard-stat-card {
+	background: var(--bg-secondary);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow-sm);
+	color: inherit;
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+	padding: 1rem;
+	text-decoration: none;
+	transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+	position: relative;
+	overflow: hidden;
+}
+
+.dashboard-stat-card:hover {
+	transform: translateY(-2px);
+	box-shadow: var(--shadow-md);
+	text-decoration: none;
+}
+
+.dashboard-stat-card::before {
+	content: '';
+	position: absolute;
+	inset: 0 auto 0 0;
+	width: 4px;
+	background: var(--primary);
+}
+
+.dashboard-stat-card.tone-success::before {
+	background: var(--success);
+}
+
+.dashboard-stat-card.tone-warning::before {
+	background: var(--warning);
+}
+
+.dashboard-stat-card.tone-danger::before {
+	background: var(--error);
+}
+
+.dashboard-stat-card.tone-info::before {
+	background: var(--info);
+}
+
+.dashboard-stat-label {
+	color: var(--text-secondary);
+	font-size: 0.85rem;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.dashboard-stat-value {
+	font-size: clamp(1.6rem, 2vw, 2.1rem);
+	font-variant-numeric: tabular-nums;
+	font-weight: 700;
+	line-height: 1.1;
+}
+
+.dashboard-stat-meta {
+	color: var(--text-secondary);
+	font-size: 0.92rem;
+}
+
+.dashboard-chart-canvas {
+	background:
+		radial-gradient(circle at top left, rgba(255, 255, 255, 0.05), transparent 45%),
+		linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(15, 23, 42, 0.08));
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	display: block;
+	width: 100%;
+	min-height: 180px;
+}
+
+.dashboard-table-wrap {
+	overflow-x: auto;
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+}
+
+.u-sortable-table {
+	border-collapse: collapse;
+	font-size: 0.95rem;
+	min-width: 720px;
+	width: 100%;
+}
+
+.u-sortable-table thead th {
+	background: var(--surface-elevated);
+	border-bottom: 1px solid var(--border);
+	color: var(--text-primary);
+	font-size: 0.78rem;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	padding: 0.85rem 1rem;
+	position: relative;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+.u-sortable-table thead th.sortable {
+	cursor: pointer;
+	padding-right: 2rem;
+	user-select: none;
+}
+
+.u-sortable-table thead th.sortable::after {
+	content: ':';
+	color: var(--text-muted);
+	position: absolute;
+	right: 0.75rem;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 0.8rem;
+}
+
+.u-sortable-table thead th.sorted-asc::after {
+	content: '^';
+	color: var(--primary);
+}
+
+.u-sortable-table thead th.sorted-desc::after {
+	content: 'v';
+	color: var(--primary);
+}
+
+.u-sortable-table tbody tr:nth-child(odd) {
+	background: rgba(148, 163, 184, 0.05);
+}
+
+.u-sortable-table tbody tr:hover {
+	background: rgba(96, 165, 250, 0.08);
+}
+
+.u-sortable-table td {
+	border-bottom: 1px solid var(--border);
+	padding: 0.85rem 1rem;
+	vertical-align: top;
+	font-variant-numeric: tabular-nums;
+}
+
+.u-sortable-table tbody tr:last-child td {
+	border-bottom: none;
+}
+
+.u-sortable-table .align-right {
+	text-align: right;
+}
+
+.u-sortable-table .align-center {
+	text-align: center;
+}
+
+.u-sortable-table .muted {
+	color: var(--text-secondary);
+	text-align: center;
+}
+
+@media (max-width: 768px) {
+	.dashboard-panel {
+		padding: 1rem;
+	}
+
+	.u-sortable-table {
+		min-width: 600px;
+	}
+}

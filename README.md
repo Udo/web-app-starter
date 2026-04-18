@@ -83,6 +83,16 @@ Example and standard components are located in the `components/` directory, but 
 <?= component('components/layout/section:end') ?>
 ```
 
+## Dashboard Primitives
+
+The starter now includes a small set of dashboard-focused building blocks backported from a more complex production frontend:
+
+- `js/u-format.js` for human-readable byte, count, and duration formatting plus unit-aware parsing
+- `js/u-sortable-table.js` for lightweight sortable HTML tables with persisted sort state
+- `js/u-timeseries-chart.js` for multi-series canvas charts without pulling in a charting framework
+- `components/data/summary-metrics.php`, `components/data/sortable-table.php`, and `components/data/timeseries-chart.php`
+- `views/dashboard.php` as a working end-to-end example
+
 ### Inline Components
 
 You can also declare components directly in code:

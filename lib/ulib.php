@@ -28,7 +28,7 @@ function include_js($src_file)
 	if(!($file_location = get_file_location($src_file))) return;
 	if($GLOBALS['include_once'][$file_location]) return;
 	$GLOBALS['include_once'][$file_location] = true;
-	?><script src="<?= cfg('url/root').$file_location ?>?v=<?= filemtime($file_location) ?>"></script><?
+	?><script src="<?= cfg('url/root').$file_location ?>?v=<?= filemtime($file_location) ?>"></script><?php
 }
 
 function include_css($src_file)
@@ -36,7 +36,7 @@ function include_css($src_file)
 	if(!($file_location = get_file_location($src_file))) return;
 	if($GLOBALS['include_once'][$file_location]) return;
 	$GLOBALS['include_once'][$file_location] = true;
-	?><link rel="stylesheet" href="<?= cfg('url/root').$file_location ?>?v=<?= filemtime($file_location) ?>" /><?
+	?><link rel="stylesheet" href="<?= cfg('url/root').$file_location ?>?v=<?= filemtime($file_location) ?>" /><?php
 }
 	
 # **************************** GENERAL UTILITY FUNCTIONS ******************************
