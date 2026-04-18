@@ -193,7 +193,10 @@ class Filebase
     static function truncate_log($from_file, $lines = 128)
     {
         $lines = intval($lines);
-        return(shell_exec('tail -n '.$lines.' '.escapeshellarg($from_file).' > /tmp/trunc ; cp /tmp/trunc '.escapeshellarg($from_file)));
+        $tmp = tempnam(sys_get_temp_dir(), 'trunc_');
+        shell_exec('tail -n '.$lines.' '.escapeshellarg($from_file).' > '.escapeshellarg($tmp).' && cp '.escapeshellarg($tmp).' '.escapeshellarg($from_file));
+        @unlink($tmp);
+        return true;
     }
 
     static function json_lines($lines)

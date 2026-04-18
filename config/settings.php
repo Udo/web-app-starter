@@ -35,7 +35,7 @@
 	define('ONE_HOUR', 60*60);
 	define('ONE_DAY', 60*60*24);
 	define('ONE_MONTH', 60*60*24*30);
-	define('ONE_YEAR', 60*60*24*30*365);
+	define('ONE_YEAR', 60*60*24*365);
 	
 	$GLOBALS['config'] = array(
 		'debug' => array(

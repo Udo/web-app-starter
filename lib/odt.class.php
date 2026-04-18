@@ -421,7 +421,8 @@ class ODT
 
 		$this->debug_output = trim(
 			shell_exec('cd '.escapeshellarg($this->temp_dir).' ; zip -r ../tmp.odt * 2>&1'));
-		if(!file_exists('/tmp/tmp.odt'))
+		$zip_output = dirname($this->temp_dir).'/tmp.odt';
+		if(!file_exists($zip_output))
 		{
 			$this->error_msg = 'Failed to create tmp ODT file (shell "'.$this->debug_output.'")';
 			return false;
@@ -429,7 +430,7 @@ class ODT
 		if(file_exists($out_filename)) {
 			unlink($out_filename);
 		}
-		shell_exec('mv /tmp/tmp.odt '.escapeshellarg($out_filename));
+		shell_exec('mv '.escapeshellarg($zip_output).' '.escapeshellarg($out_filename));
 
 		if (!file_exists($out_filename)) {
 			$this->error_msg = 'Failed to create ODT file "'.$out_filename.'"';

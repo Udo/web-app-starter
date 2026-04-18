@@ -8,7 +8,7 @@
 	}
 }(typeof self !== 'undefined' ? self : this, function () {
 
-Connection = {
+var Connection = {
 
 	auto_reconnect : false,
 	established : false,

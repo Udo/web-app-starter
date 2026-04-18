@@ -1,6 +1,6 @@
 <?php
 if (!User::IsSignedIn()) {
-    header('Location: login.php');
+    header('Location: '.URL::link('account/login'));
     exit;
 }
 $u = User::$current_profile;

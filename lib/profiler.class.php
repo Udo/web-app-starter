@@ -23,7 +23,7 @@ class Profiler
 			number_format(1000*($thistime - self::$last), 3).'ms | '.
 			ceil(memory_get_usage()/1024).' kB | '.self::$indent_str.$text;
 		if($indent_delta > 0) // if greater than zero, update indent after logging
-			self::$indent_str = str_repeat(' ', 2*max(0, strlen(self::$indent_str) + $indent_delta));
+			self::$indent_str = str_repeat(' ', self::$indent_level * 2);
 		self::$last = $thistime;
 		self::$current = $absoluteMS;
 		return($thistime);

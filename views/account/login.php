@@ -27,6 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <label>Password: <input type="password" name="password" required></label><br>
     <button type="submit">Login</button>
 </form>
-<p><a href="register.php">Register</a></p>
+<p><a href="<?= URL::link('account/register') ?>">Register</a></p>
 </body>
 </html>

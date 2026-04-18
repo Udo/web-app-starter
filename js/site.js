@@ -1,6 +1,6 @@
 var enable_debug = true;
 
-UI = {
+var UI = {
 
     smoothScrollToNamedAnchors: function() {
         $('a[href^="#"]').each(anchor => {

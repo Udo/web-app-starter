@@ -7,10 +7,10 @@
                 'period' => '',
                 'description' => 'Perfect for small projects and learning',
                 'features' => [
-                    'Fuckall',
-                    'A warm handshake',
-                    'A pat on the back',
-                    'A cup of coffee'
+                    'Up to 3 projects',
+                    'Community support',
+                    'Core components',
+                    'Basic documentation'
                 ],
                 'cta' => 'Get Started',
                 'popular' => false
@@ -28,7 +28,7 @@
                     'Custom themes',
                     'Analytics dashboard'
                 ],
-                'cta' => 'Start Not Quite Free Trial',
+                'cta' => 'Start Free Trial',
                 'popular' => true
             ],
             [
@@ -44,7 +44,7 @@
                     'Advanced security',
                     'White-label options'
                 ],
-                'cta' => 'Contact Desperate Sales Person',
+                'cta' => 'Contact Sales',
                 'popular' => false
             ]
         ];
@@ -54,7 +54,7 @@
             <div class="pricing-container">
                 <div class="pricing-header">
                     <h2>Choose Your Plan</h2>
-                    <p>Start building fucking amazing applications today with our quite inflexible pricing options</p>
+                    <p>Start building great applications today with our flexible pricing options</p>
                 </div>
                 <div class="pricing-grid">
                     <?php foreach($plans as $index => $plan): ?>

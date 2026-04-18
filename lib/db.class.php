@@ -168,7 +168,7 @@ class DB
 	
 	static function GetRowsMatch($table, $matchOptions, $fillIfEmpty = true)
 	{
-		self::$writeOps++;
+		self::$readOps++;
 		$where = array('1');
 		foreach($matchOptions as $k => $v)
 			$where[] = '('.$k.'="'.DB::Safe($v).'")';
@@ -200,8 +200,10 @@ class DB
 		$cache_entry = $tablename.':'.$keyname.':'.$keyvalue;
 		if(isset(self::$dataCache[$cache_entry])) return(self::$dataCache[$cache_entry]);
 	
-		$query = 'SELECT '.$fields.' FROM '.$tablename.' '.$options['join'].' WHERE '.$keyname.'="'.DB::Safe($keyvalue).'";';
+		$join = isset($options['join']) ? ' '.$options['join'] : '';
+		$query = 'SELECT '.$fields.' FROM '.$tablename.$join.' WHERE '.$keyname.'="'.DB::Safe($keyvalue).'";';
 		$queryResult = mysqli_query(self::$link, $query) or critical(mysqli_error(self::$link).' { Query: "'.$query.'" }');
+		self::$readOps++;
 	
 		if ($line = @mysqli_fetch_array($queryResult, MYSQLI_ASSOC))
 		{
@@ -214,7 +216,6 @@ class DB
 			$result = array();
 	
 		Profiler::Log('DB::GetRow('.$tablename.', '.$keyvalue.') #fail');
-		self::$readOps++;
 		return($result);
 	}  
 

@@ -38,7 +38,7 @@ return [
 		$prop['img_height'] = first($prop['img_height'] ?? false, 
 			$prop['size'] * max(cos(first($prop['scale']['angle_start'], -pi())), cos(first($prop['scale']['angle_end'], 0))));
 		?>        
-		<section class="gauge-set needlegauge-set" id="<?= $prop['id'] ?>" style="<?= $prop['style'] ?>">
+		<section class="gauge-set needlegauge-set" id="<?= asafe($prop['id']) ?>" style="<?= asafe($prop['style']) ?>">
 			<?php if(isset($prop['title'])) { ?>
 				<div class="gauge-set-header">
 					<h3><?= safe($prop['title']) ?></h3>

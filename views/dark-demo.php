@@ -1,11 +1,11 @@
-<?= component('components/hero-section', [
+<?= component('components/example/hero-section', [
     'title' => 'Dark Theme Demo',
     'subtitle' => 'Experience our beautiful dark mode with enhanced readability and modern aesthetics.',
     'cta_text' => 'Explore Features',
     'cta_link' => '#features'
 ]) ?>
 
-<?= component('components/features-grid', [
+<?= component('components/example/features-grid', [
     'features' => [
         [
             'icon' => '🌙',
@@ -25,7 +25,7 @@
     ]
 ]) ?>
 
-<?= component('components/pricing-table', [
+<?= component('components/example/pricing-table', [
     'plans' => [
         [
             'name' => 'Dark Starter',
@@ -90,10 +90,7 @@
     </div>
 </div>
 
-    ]
-]) ?>
-
-<?= component('components/theme-switcher') ?>
+<?= component('components/example/theme-switcher') ?>
 
 <style>
 .demo-section {
