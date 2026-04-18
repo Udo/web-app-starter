@@ -107,6 +107,20 @@ The starter also includes a second backport slice from the `uh-ai` portal app:
 - `js/u-workspace-shell.js` for simple responsive sidebar toggling
 - `views/workspace/index.php` as a nested-route demo for shell-style products
 
+## Theme Families
+
+The starter now also includes named theme families derived from the `uh-ai` portal app and the `uh-llm2` admin shell:
+
+- `portal-light` for the B612-based corporate portal look
+- `portal-dark` for the glassy dark portal shell and the current default starter theme
+- `localfirst` for the cyan/orange llm2-style admin shell
+
+Theme choice is now resolved server-side from `config/settings.php`, with a validated theme key stored in the `starter_theme` cookie. The floating theme picker updates the current request route and persists the selection for later navigation.
+
+To compare themes side by side, use `/?themes`. The gallery embeds a shared `/?theme-preview` route under every available theme so you can evaluate shell chrome, content density, and form styling with the same fixture.
+
+The homepage demo form now includes proper `id` and `name` attributes so the starter does not emit the earlier label/field accessibility warnings on the landing page.
+
 ### Inline Components
 
 You can also declare components directly in code:

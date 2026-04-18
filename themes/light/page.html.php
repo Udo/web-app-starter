@@ -3,6 +3,7 @@
 ?><!doctype html>
 <html class="no-js" lang="">
 <?php
+	$embed_mode = !empty($_GET['embed']);
 	$url_root = cfg('url/root');
 	$theme_path = cfg('theme/path');
 	$theme_path_common = 'themes/common/';
@@ -26,9 +27,10 @@
 	?>
 </head>
 
-<body>
-	<?= component('components/example/theme-switcher') ?>
-	<?= component('components/basic/cookie-consent') ?>
+
+<body<?= $embed_mode ? ' class="embed-mode"' : '' ?>>
+	<?php if(!$embed_mode): ?><?= component('components/example/theme-switcher') ?><?php endif; ?>
+	<?php if(!$embed_mode): ?><?= component('components/basic/cookie-consent') ?><?php endif; ?>
 	<nav>
 		<?php require_once __DIR__ . '/../../lib/user.class.php'; ?>
 		<div class="nav-menu">
@@ -60,23 +62,25 @@
 		}
 		?>
 	</nav>
-	<div id="content">
+	<div id="content"<?= $embed_mode ? ' class="embed-content"' : '' ?>>
 		<?= URL::$fragments['main'] ?> 
 	</div> 
-	<footer>
+	<?php if(!$embed_mode): ?><footer>
 		<div style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
 			<p>WebAppStarter by Udo Schroeter (udo@openfu.com)</p>
 		</div>
-	</footer>
+	</footer><?php endif; ?>
 </body>
 <?php
 	Profiler::log('page template: end', -1);
 ?>
+<?php if(!$embed_mode): ?>
 <script>
 	console.log('server stats', <?= json_encode([
 		'route' => URL::$route,
 		'perf' => Profiler::$log,
 	]) ?>);
 </script>
+<?php endif; ?>
 </html>
 

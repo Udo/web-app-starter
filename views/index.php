@@ -36,16 +36,16 @@
                 <h3>Modern Forms</h3>
                 <form class="demo-form">
                     <div>
-                        <label>Full Name</label>
-                        <input type="text" placeholder="Enter your name" />
+                        <label for="demo-full-name">Full Name</label>
+                        <input id="demo-full-name" name="full_name" type="text" placeholder="Enter your name" autocomplete="name" />
                     </div>
                     <div>
-                        <label>Email Address</label>
-                        <input type="email" placeholder="you@example.com" />
+                        <label for="demo-email-address">Email Address</label>
+                        <input id="demo-email-address" name="email" type="email" placeholder="you@example.com" autocomplete="email" />
                     </div>
                     <div>
-                        <label>Message</label>
-                        <textarea placeholder="Tell us what you think..." rows="4"></textarea>
+                        <label for="demo-message">Message</label>
+                        <textarea id="demo-message" name="message" placeholder="Tell us what you think..." rows="4"></textarea>
                     </div>
                     <button type="submit">Send Message</button>
                 </form>
@@ -68,6 +68,33 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="card">
+<h2>Theme Families</h2>
+<p>Compare the starter’s built-in theme families and jump to the live gallery.</p>
+<div class="theme-grid">
+    <div class="component-card">
+        <h3>AI Portal Light</h3>
+        <p>B612-heavy portal shell with dense navigation and a corporate light palette.</p>
+        <a class="btn" href="<?= URL::Link('themes', ['theme' => 'portal-light']) ?>">Preview Theme</a>
+    </div>
+    <div class="component-card">
+        <h3>AI Portal Dark</h3>
+        <p>The new default: a glassy dark layout that works across marketing and admin routes.</p>
+        <a class="btn" href="<?= URL::Link('themes', ['theme' => 'portal-dark']) ?>">Preview Theme</a>
+    </div>
+    <div class="component-card">
+        <h3>Local First</h3>
+        <p>Cyan and orange admin shell derived from llm2, best suited for dashboard-style products.</p>
+        <a class="btn" href="<?= URL::Link('themes', ['theme' => 'localfirst']) ?>">Preview Theme</a>
+    </div>
+    <div class="component-card">
+        <h3>Starter Themes</h3>
+        <p>The original light and dark starter skins remain available in the same gallery for side-by-side checks.</p>
+        <a class="btn btn-secondary" href="<?= URL::Link('themes') ?>">Open Gallery</a>
+    </div>
+</div>
 </div>
 
 <?= component('components/example/cta-section', [
